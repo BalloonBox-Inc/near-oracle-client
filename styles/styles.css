@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.btn-gradient {
+    background: rgb(85,75,249);
+    background: linear-gradient(90deg, rgba(85,75,249,1) 0%, rgba(143,0,255,1) 37%, rgba(153,66,142,1) 79%, rgba(224,60,55,1) 100%);
+    box-shadow: inset -4px -2px 8px 0px rgba(0,0,0,0.35);
+}
+
+.btn-gradient:hover {
+   opacity: 0.8
+}
