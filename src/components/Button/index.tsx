@@ -48,12 +48,12 @@ export default function Button({
 }: IButtonField) {
   const classnames = cx(
     {
-      "inline-flex justify-center py-2 px-6 text-sm font-thin rounded-3xl focus:outline-none":
+      "inline-flex justify-center py-2 px-6 text-sm rounded-3xl focus:outline-none":
         style !== BUTTON_STYLES.LINK,
-      "hover:opacity-75": style === BUTTON_STYLES.LINK,
-      "text-white border-solid border-gradient py-2 cursor-pointer":
+      "hover:opacity-75 text-sm underline": style === BUTTON_STYLES.LINK,
+      "text-white border-solid border-2 border-white py-2 cursor-pointer":
         style === BUTTON_STYLES.OUTLINE,
-      "text-white btn-gradient hover:opacity-75  cursor-pointer min-w-4 gradient-outline ":
+      "text-white btn-gradient hover:opacity-75 cursor-pointer min-w-4 gradient-outline ":
         style === BUTTON_STYLES.DEFAULT,
       "disabled:opacity-70 cursor-default gradient-outline-grayscale":
         isDisabled || isLoading,

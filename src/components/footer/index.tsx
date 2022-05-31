@@ -1,10 +1,9 @@
-// eslint-disable-next-line @next/next/no-img-element
 import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer
-      className={`z-50 py-5 px-10 w-full flex flex-row items-center text-white justify-between font-sans`}
+      className={`z-50 py-3 px-10 w-full flex flex-row items-center text-white justify-between font-sans`}
     >
       <div>
         <Link passHref={true} href="/">

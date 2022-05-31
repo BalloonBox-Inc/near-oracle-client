@@ -1,15 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
 import { useContext } from "react";
 import { DisconnectOutlined, CloseOutlined } from "@ant-design/icons";
 import { INearContext, NearContext } from "@nearoracle/src/context";
 
 const Connect = ({ showAccount, setShowAccount }: any) => {
   const { handleSignIn, handleSignOut, isConnected, wallet } =
-    useContext(NearContext);
+    useContext<INearContext>(NearContext);
 
   return (
     <div
-      className="flex text-white items-center btn-gradient py-1 px-5 rounded-3xl cursor-pointer"
+      className={`flex text-white items-center btn-gradient py-1 px-5 rounded-3xl cursor-pointer`}
       onClick={() => {
         !isConnected ? handleSignIn() : setShowAccount(true);
       }}
