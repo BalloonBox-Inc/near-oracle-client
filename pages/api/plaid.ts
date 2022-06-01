@@ -73,7 +73,6 @@ export default async function handler(
 
       const access_token = await response.data.access_token;
       const plaidBody = {
-        keplr_token: "not-needed",
         plaid_token: access_token,
         plaid_client_id: PLAID_CLIENT_ID,
         plaid_client_secret: PLAID_SECRET_KEY_SANDBOX,
