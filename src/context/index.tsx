@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useEffect, useReducer, useMemo } from "react";
 import { connect, WalletConnection } from "near-api-js";
 import { useRouter } from "next/router";
 import { notification } from "antd";
@@ -41,18 +41,94 @@ export const storageHelper = {
   },
 };
 
+const contextReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case "SET_WALLET":
+      return {
+        ...state,
+        wallet: action.payload,
+      };
+    case "SET_ISCONNECTED":
+      return {
+        ...state,
+        isConnected: action.payload,
+      };
+    case "SET_LOADING":
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case "SET_SCORE_RESPONSE":
+      return {
+        ...state,
+        scoreResponse: action.payload,
+      };
+    case "SET_COINBASE_TOKEN":
+      return {
+        ...state,
+        coinbaseToken: action.payload,
+      };
+    case "SET_PLAID_PUBLIC_TOKEN":
+      return {
+        ...state,
+        plaidPublicToken: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  wallet: null,
+  isConnected: false,
+  loading: true,
+  scoreResponse: null,
+  coinbaseToken: null,
+  plaidPublicToken: null,
+};
+
 export const NearContext = createContext<INearContext | undefined>(undefined);
 
 export const NearProvider = ({ children }: any) => {
   const config = getConfig("testnet");
-  const [wallet, setWallet] = useState<WalletConnection | null>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [scoreResponse, setScoreResponse] = useState<
-    IScoreResponseCoinbase | IScoreResponsePlaid | null
-  >(null);
-  const [coinbaseToken, setCoinbaseToken] = useState(null);
-  const [plaidPublicToken, setPlaidPublicToken] = useState(null);
+  const [state, dispatch] = useReducer(contextReducer, initialState);
+
+  const handlers = useMemo(() => {
+    return {
+      setWallet: (wallet: WalletConnection) =>
+        dispatch({ type: "SET_WALLET", payload: wallet }),
+      setIsConnected: (isConnected: boolean) =>
+        dispatch({ type: "SET_ISCONNECTED", payload: isConnected }),
+      setLoading: (loading: boolean) =>
+        dispatch({ type: "SET_LOADING", payload: loading }),
+      setScoreResponse: (
+        scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
+      ) => dispatch({ type: "SET_SCORE_RESPONSE", payload: scoreResponse }),
+      setCoinbaseToken: (coinbaseToken: ICoinbaseTokenCreateResponse | null) =>
+        dispatch({ type: "SET_COINBASE_TOKEN", payload: coinbaseToken }),
+      setPlaidPublicToken: (plaidPublicToken: string | null) =>
+        dispatch({ type: "SET_PLAID_PUBLIC_TOKEN", payload: plaidPublicToken }),
+    };
+  }, []);
+
+  const {
+    setWallet,
+    setIsConnected,
+    setLoading,
+    setScoreResponse,
+    setCoinbaseToken,
+    setPlaidPublicToken,
+  } = handlers;
+
+  const {
+    wallet,
+    isConnected,
+    loading,
+    scoreResponse,
+    coinbaseToken,
+    plaidPublicToken,
+  } = state;
+
   const router = useRouter();
 
   useEffect(() => {

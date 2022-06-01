@@ -128,7 +128,7 @@ const ScoreSpeedometer = ({
             style={{ backgroundColor: renderTagBgColor(quality) }}
             className="px-4 py-1 sm:text-xs rounded-2xl mt-4 uppercase"
           >
-            {quality ? quality : "null"}
+            {quality}
           </div>
         </div>
 
