@@ -162,19 +162,24 @@ export const NearProvider = ({ children }: any) => {
   useEffect(() => {
     const returnHome = () => {
       if (typeof window !== "undefined") {
-        (!isConnected && router.asPath.includes("applicant")) ||
-          (router.asPath.includes("providers") && router.push("/"));
+        (router.pathname.includes("applicant") ||
+          router.pathname.includes("providers")) &&
+          router.push("/");
       }
-      returnHome();
     };
-  }, [router, isConnected]);
+
+    if (!loading) {
+      !isConnected && returnHome();
+    }
+  }, [router, isConnected, loading]);
 
   useEffect(() => {
     if (!loading) {
       storageHelper.persist("coinbaseToken", coinbaseToken);
       storageHelper.persist("plaidPublicToken", plaidPublicToken);
+      storageHelper.persist("scoreResponse", scoreResponse);
     }
-  }, [coinbaseToken, plaidPublicToken]);
+  }, [coinbaseToken, plaidPublicToken, scoreResponse]);
 
   useEffect(() => {
     setCoinbaseToken(storageHelper.get("coinbaseToken"));

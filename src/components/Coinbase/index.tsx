@@ -20,7 +20,7 @@ const Coinbase = ({
   const { setScoreResponse, setCoinbaseToken, scoreResponse, coinbaseToken } =
     useContext(NearContext);
 
-  // redirect to the SDK
+  // 1. redirect to the SDK
   const getCoinbaseSdkUrl = useCallback(async () => {
     setToWaiting();
     const res = await fetch("/api/coinbase");
@@ -42,7 +42,6 @@ const Coinbase = ({
       if (coinbaseScore?.status === "success") {
         setScoreResponse(coinbaseScore);
         router.replace("/applicant/generate?type=coinbase&status=success");
-        setNotWaiting();
       } else if (
         coinbaseScore?.message === "The access token expired" ||
         coinbaseScore?.message === "The access token is invalid"
@@ -98,7 +97,7 @@ const Coinbase = ({
   useEffect(() => {
     const getCoinbaseTokens = async (code: string) => {
       try {
-        // Send the code we got from the SDK to retrieve access_token + refresh_token
+        // 2. send the code we got from the SDK to retrieve access_token + refresh_token
         router.replace("/applicant/generate");
         const resJson = await handleCoinbaseCode(code);
 
