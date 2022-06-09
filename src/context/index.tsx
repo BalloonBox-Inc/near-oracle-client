@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useReducer, useMemo } from "react";
-import { connect, WalletConnection } from "near-api-js";
+import { connect, WalletConnection, Contract } from "near-api-js";
 import { useRouter } from "next/router";
 import { notification } from "antd";
 
@@ -15,19 +15,43 @@ export interface INearContext {
   handleSignOut: () => void;
   loading: boolean;
   isConnected: boolean;
-  setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsConnected: (isConnected: boolean) => void;
   wallet: WalletConnection | null;
   scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null;
-  setScoreResponse: React.Dispatch<
-    React.SetStateAction<IScoreResponseCoinbase | IScoreResponsePlaid | null>
-  >;
+  setScoreResponse: (
+    scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
+  ) => void;
   coinbaseToken: ICoinbaseTokenCreateResponse | null;
-  setCoinbaseToken: React.Dispatch<
-    React.SetStateAction<ICoinbaseTokenCreateResponse | null>
-  >;
-  setPlaidPublicToken: React.Dispatch<React.SetStateAction<null | string>>;
+  setCoinbaseToken: (
+    coinbaseToken: ICoinbaseTokenCreateResponse | null
+  ) => void;
+  setPlaidPublicToken: (plaidPublicToken: string | null) => void;
   plaidPublicToken: string | null;
+  contract: Contract;
+  chainActivity: IChainActivity;
+  setChainActivity: (chainActivity: IChainActivity) => void;
+  handleSetChainActivity: (a: IChainActivity | null) => void;
 }
+
+export enum CHAIN_ACTIVITIES {
+  scoreSubmitted = "scoreSubmitted",
+  dataProvider = "dataProvider",
+  scoreAmount = "scoreAmount",
+  scoreMessage = "scoreMessage",
+}
+export interface IChainActivity {
+  [CHAIN_ACTIVITIES.scoreSubmitted]?: boolean;
+  [CHAIN_ACTIVITIES.dataProvider]?: "coinbase" | "plaid";
+  [CHAIN_ACTIVITIES.scoreAmount]?: number;
+  [CHAIN_ACTIVITIES.scoreMessage]?: string;
+}
+
+export const CHAIN_ACTIVITIES_INIT = {
+  scoreSubmitted: undefined,
+  dataProvider: undefined,
+  scoreAmount: undefined,
+  scoreMessage: undefined,
+};
 
 export const storageHelper = {
   persist: (key: string, item: any) =>
@@ -63,6 +87,11 @@ const contextReducer = (state: any, action: any) => {
         ...state,
         scoreResponse: action.payload,
       };
+    case "SET_CHAIN_ACITIVITY":
+      return {
+        ...state,
+        chainActivity: action.payload,
+      };
     case "SET_COINBASE_TOKEN":
       return {
         ...state,
@@ -72,6 +101,11 @@ const contextReducer = (state: any, action: any) => {
       return {
         ...state,
         plaidPublicToken: action.payload,
+      };
+    case "SET_CONTRACT":
+      return {
+        ...state,
+        contract: action.payload,
       };
     default:
       return state;
@@ -83,8 +117,10 @@ const initialState = {
   isConnected: false,
   loading: true,
   scoreResponse: null,
+  chainActivity: CHAIN_ACTIVITIES_INIT,
   coinbaseToken: null,
   plaidPublicToken: null,
+  contract: null,
 };
 
 export const NearContext = createContext<INearContext | undefined>(undefined);
@@ -104,10 +140,14 @@ export const NearProvider = ({ children }: any) => {
       setScoreResponse: (
         scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
       ) => dispatch({ type: "SET_SCORE_RESPONSE", payload: scoreResponse }),
+      setChainActivity: (chainActivity: IChainActivity) =>
+        dispatch({ type: "SET_CHAIN_ACTIVITY", payload: chainActivity }),
       setCoinbaseToken: (coinbaseToken: ICoinbaseTokenCreateResponse | null) =>
         dispatch({ type: "SET_COINBASE_TOKEN", payload: coinbaseToken }),
       setPlaidPublicToken: (plaidPublicToken: string | null) =>
         dispatch({ type: "SET_PLAID_PUBLIC_TOKEN", payload: plaidPublicToken }),
+      setContract: (contract: Contract | null) =>
+        dispatch({ type: "SET_CONTRACT", payload: contract }),
     };
   }, []);
 
@@ -118,6 +158,8 @@ export const NearProvider = ({ children }: any) => {
     setScoreResponse,
     setCoinbaseToken,
     setPlaidPublicToken,
+    setContract,
+    setChainActivity,
   } = handlers;
 
   const {
@@ -127,6 +169,8 @@ export const NearProvider = ({ children }: any) => {
     scoreResponse,
     coinbaseToken,
     plaidPublicToken,
+    contract,
+    chainActivity,
   } = state;
 
   const router = useRouter();
@@ -138,21 +182,21 @@ export const NearProvider = ({ children }: any) => {
       // Initializing wallet based account.
       const nearWallet = new WalletConnection(near, "near-oracle");
       setWallet(nearWallet);
+
+      // Initializing the contract APIs by contract name and configuration
+
+      const nearContract = new Contract(
+        nearWallet.account(),
+        "storescore.bbox.testnet",
+        {
+          viewMethods: ["query_score_history"],
+          changeMethods: ["store_score"],
+        }
+      );
+      setContract(nearContract);
     };
 
     initContract();
-
-    // Todo: Initializing the contract APIs by contract name and configuration
-    // window.contract = await new Contract(
-    //   wallet.account(),
-    //   config.contractName,
-    //   {
-    //     // View methods are read only. They don't modify the state, but usually return some value.
-    //     viewMethods: ["getGreeting"],
-    //     // Change methods can modify the state. But you don't receive the returned value when called.
-    //     changeMethods: ["setGreeting"],
-    //   }
-    // );
   }, []);
 
   useEffect(() => {
@@ -167,6 +211,7 @@ export const NearProvider = ({ children }: any) => {
           router.push("/");
       }
     };
+    console.log(isConnected);
 
     if (!loading) {
       !isConnected && returnHome();
@@ -178,16 +223,20 @@ export const NearProvider = ({ children }: any) => {
       storageHelper.persist("coinbaseToken", coinbaseToken);
       storageHelper.persist("plaidPublicToken", plaidPublicToken);
       storageHelper.persist("scoreResponse", scoreResponse);
+      storageHelper.persist("chainActivity", chainActivity);
     }
-  }, [coinbaseToken, plaidPublicToken, scoreResponse]);
+  }, [coinbaseToken, plaidPublicToken, scoreResponse, chainActivity]);
 
   useEffect(() => {
+    setIsConnected(storageHelper.get("near-oracle_wallet_auth_key") && true);
     setCoinbaseToken(storageHelper.get("coinbaseToken"));
     setPlaidPublicToken(storageHelper.get("plaidPublicToken"));
     setScoreResponse(storageHelper.get("scoreResponse"));
+    setChainActivity(storageHelper.get("chainActivity"));
     setLoading(false);
   }, []);
 
+  // redirect to the NEAR wallet SDK
   const handleSignIn = () => {
     wallet?.requestSignIn();
   };
@@ -197,16 +246,29 @@ export const NearProvider = ({ children }: any) => {
     setIsConnected(false);
     setCoinbaseToken(null);
     setPlaidPublicToken(null);
+    setScoreResponse(null);
+    setChainActivity(CHAIN_ACTIVITIES_INIT);
     localStorage.clear();
-    router.replace("/");
     notification.success({
       message: "Successfully disconnected wallet",
     });
   };
 
+  const handleSetChainActivity = (val: IChainActivity | null) => {
+    if (val) {
+      setChainActivity({ ...chainActivity, ...val });
+      storageHelper.persist("chainActivity", val);
+    }
+    // } else {
+    //   setChainActivity(CHAIN_ACTIVITIES_INIT);
+    //   storageHelper.persist("chainActivity", CHAIN_ACTIVITIES_INIT);
+    // }
+  };
+
   return (
     <NearContext.Provider
       value={{
+        loading,
         handleSignIn,
         handleSignOut,
         isConnected,
@@ -218,6 +280,10 @@ export const NearProvider = ({ children }: any) => {
         setCoinbaseToken,
         plaidPublicToken,
         setPlaidPublicToken,
+        contract,
+        setChainActivity,
+        chainActivity,
+        handleSetChainActivity,
       }}
     >
       {children}

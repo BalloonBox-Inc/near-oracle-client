@@ -8,10 +8,12 @@ const ScoreSpeedometer = ({
   score,
   quality,
   showScore,
+  timestamp,
 }: {
   score: number;
-  quality: string;
-  showScore: boolean;
+  quality?: string;
+  showScore?: boolean;
+  timestamp?: number;
 }) => {
   const [randomNumber, setRandomNumber] = useState<string | null>("300");
   const rotationCalculator = (scr: number) => {
@@ -85,7 +87,7 @@ const ScoreSpeedometer = ({
 
   return (
     <div className="flex w-full justify-center pt-10">
-      <div className="inline-block relative z-50">
+      <div className="inline-block relative">
         {/* WEB */}
         <div className="hidden sm:block" style={{ width: "575px" }}>
           <Image src={ScoreMainImg} alt="score-top" />
@@ -124,12 +126,15 @@ const ScoreSpeedometer = ({
           <div className="text-4xl sm:text-6xl font-bold z-40 mt-48 sm:-mt-52 tracking-tighter">
             {showScore ? score : randomNumber}
           </div>
-          <div
-            style={{ backgroundColor: renderTagBgColor(quality) }}
-            className="px-4 py-1 sm:text-xs rounded-2xl mt-4 uppercase"
-          >
-            {quality}
-          </div>
+          {timestamp && <p className="mt-5">Score stored on: {timestamp}</p>}
+          {quality && (
+            <div
+              style={{ backgroundColor: renderTagBgColor(quality) }}
+              className="px-4 py-1 text-xs sm:text-xs rounded-2xl mt-4 uppercase"
+            >
+              {quality}
+            </div>
+          )}
         </div>
 
         {/* MOBILE */}

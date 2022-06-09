@@ -17,6 +17,7 @@
     "plaid": "^10.4.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-lottie": "^1.2.3",
     "react-plaid-link": "^3.3.2",
     "react-spinners": "^0.11.0"
   },

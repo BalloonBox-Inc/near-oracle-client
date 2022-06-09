@@ -73,11 +73,14 @@ export default async function handler(
 
       const access_token = await response.data.access_token;
       const plaidBody = {
-        plaid_token: access_token,
+        plaid_access_token: access_token,
         plaid_client_id: PLAID_CLIENT_ID,
         plaid_client_secret: PLAID_SECRET_KEY_SANDBOX,
         coinmarketcap_key: COINMARKET_KEY,
+        loan_request: 10000
       };
+
+      console.log(plaidBody);
 
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
       if (plaid_score_res.status === "error") {
