@@ -3,7 +3,10 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
-      className={`z-50 py-3 px-10 w-full flex flex-row items-center text-white justify-between font-sans`}
+      className={`py-3 px-10 w-full flex flex-row text-white justify-between font-sans absolute bottom-0`}
+      style={{
+        height: "5rem",
+      }}
     >
       <div>
         <Link passHref={true} href="/">
@@ -22,7 +25,7 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} NearOracle
         </p>
       </div>
-      <div className="flex items-center flex-col sm:flex-row ">
+      <div className="flex items-center flex-col sm:flex-row">
         <p className="text-xs pt-3 mr-2">secured by</p>
         <a href="https://near.org/" target="_blank" rel="noreferrer">
           <img

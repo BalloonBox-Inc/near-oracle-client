@@ -9,7 +9,7 @@ const Start = () => {
     "applicant" | "provider" | null
   >(null);
   return (
-    <div className="px-14 py-10">
+    <div className="sm:px-14 sm:py-10">
       <div className="w-full text-center">
         <div className="flex flex-col items-center space-y-5 justify-center w-full">
           <div className="z-50 opacity-100 px-0 sm:p-10">

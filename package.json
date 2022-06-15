@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/react-lottie": "^1.2.6",
     "antd": "^4.20.4",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "near-api-js": "^0.44.2",
     "next": "12.1.6",
+    "node-fetch": "^3.2.6",
     "plaid": "^10.4.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",

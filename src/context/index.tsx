@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { notification } from "antd";
 
 import getConfig from "@nearoracle/src/utils/config";
+import { CONTRACT_NAME } from "@nearoracle/src/utils/config";
 import { ICoinbaseTokenCreateResponse } from "@nearoracle/pages/api/coinbase";
 import {
   IScoreResponsePlaid,
@@ -11,8 +12,6 @@ import {
 } from "@nearoracle/src/types/types";
 
 export interface INearContext {
-  handleSignIn: () => void;
-  handleSignOut: () => void;
   loading: boolean;
   isConnected: boolean;
   setIsConnected: (isConnected: boolean) => void;
@@ -25,12 +24,14 @@ export interface INearContext {
   setCoinbaseToken: (
     coinbaseToken: ICoinbaseTokenCreateResponse | null
   ) => void;
-  setPlaidPublicToken: (plaidPublicToken: string | null) => void;
   plaidPublicToken: string | null;
+  setPlaidPublicToken: (plaidPublicToken: string | null) => void;
   contract: Contract;
   chainActivity: IChainActivity;
   setChainActivity: (chainActivity: IChainActivity) => void;
   handleSetChainActivity: (a: IChainActivity | null) => void;
+  handleSignIn: () => void;
+  handleSignOut: () => void;
 }
 
 export enum CHAIN_ACTIVITIES {
@@ -87,7 +88,7 @@ const contextReducer = (state: any, action: any) => {
         ...state,
         scoreResponse: action.payload,
       };
-    case "SET_CHAIN_ACITIVITY":
+    case "SET_CHAIN_ACTIVITY":
       return {
         ...state,
         chainActivity: action.payload,
@@ -184,10 +185,9 @@ export const NearProvider = ({ children }: any) => {
       setWallet(nearWallet);
 
       // Initializing the contract APIs by contract name and configuration
-
       const nearContract = new Contract(
-        nearWallet.account(),
-        "storescore.bbox.testnet",
+        nearWallet.account(), // NEAR account to sign change method transactions
+        CONTRACT_NAME, // the account where the contract has been deployed
         {
           viewMethods: ["query_score_history"],
           changeMethods: ["store_score"],
@@ -206,13 +206,12 @@ export const NearProvider = ({ children }: any) => {
   useEffect(() => {
     const returnHome = () => {
       if (typeof window !== "undefined") {
-        (router.pathname.includes("applicant") ||
-          router.pathname.includes("providers")) &&
+        (router.pathname.includes("start") ||
+          router.pathname.includes("applicant") ||
+          router.pathname.includes("provider")) &&
           router.push("/");
       }
     };
-    console.log(isConnected);
-
     if (!loading) {
       !isConnected && returnHome();
     }
@@ -225,7 +224,7 @@ export const NearProvider = ({ children }: any) => {
       storageHelper.persist("scoreResponse", scoreResponse);
       storageHelper.persist("chainActivity", chainActivity);
     }
-  }, [coinbaseToken, plaidPublicToken, scoreResponse, chainActivity]);
+  }, [coinbaseToken, plaidPublicToken, scoreResponse, chainActivity, loading]);
 
   useEffect(() => {
     setIsConnected(storageHelper.get("near-oracle_wallet_auth_key") && true);
@@ -258,11 +257,10 @@ export const NearProvider = ({ children }: any) => {
     if (val) {
       setChainActivity({ ...chainActivity, ...val });
       storageHelper.persist("chainActivity", val);
+    } else {
+      setChainActivity(CHAIN_ACTIVITIES_INIT);
+      storageHelper.persist("chainActivity", CHAIN_ACTIVITIES_INIT);
     }
-    // } else {
-    //   setChainActivity(CHAIN_ACTIVITIES_INIT);
-    //   storageHelper.persist("chainActivity", CHAIN_ACTIVITIES_INIT);
-    // }
   };
 
   return (

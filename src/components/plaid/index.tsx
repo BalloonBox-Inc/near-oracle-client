@@ -35,8 +35,7 @@ const PlaidLink = (props) => {
       props.router.replace("/applicant/generate?type=plaid&status=success");
       setScoreResponse(plaid_score_res);
     } else {
-      notification.error({ message: "Failed to calculate the score" });
-      props.router.replace("/applicant/generate");
+      handleError(false);
     }
     props.setNotWaiting();
   };

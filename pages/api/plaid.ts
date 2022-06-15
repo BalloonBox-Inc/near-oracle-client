@@ -27,12 +27,12 @@ export interface ITokenExchangeProps {
 const config = {
   client_id: PLAID_CLIENT_ID,
   secret: PLAID_SECRET_KEY_SANDBOX,
-  client_name: "client_name",
-  country_codes: ["US"],
+  client_name: "NearOracle",
+  country_codes: ["US", "CA"],
   user: {
     client_user_id: "unique_per_user",
   },
-  products: ["auth"],
+  products: ["auth","transactions"],
   language: "en",
 };
 
@@ -51,6 +51,7 @@ async function get_plaid_score(
     });
     const responseJson = await backend_response.json();
     return responseJson;
+
   } catch (error) {
     return error;
   }
@@ -72,6 +73,7 @@ export default async function handler(
       });
 
       const access_token = await response.data.access_token;
+
       const plaidBody = {
         plaid_access_token: access_token,
         plaid_client_id: PLAID_CLIENT_ID,
@@ -80,22 +82,24 @@ export default async function handler(
         loan_request: 10000
       };
 
-      console.log(plaidBody);
-
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
+
       if (plaid_score_res.status === "error") {
         setTimeout(async () => {
           plaid_score_res = await get_plaid_score(req, res, plaidBody);
           res.send({ plaid_score_res });
         }, 3000);
       } else res.send({ plaid_score_res });
+  
       return;
     } catch (error) {
       res.send({ error });
     }
   }
 
-  try {
+
+   // create a link token
+   try {
     const createTokenRes = await fetch(url, {
       method: "POST",
       headers: {

@@ -8,12 +8,12 @@ const ScoreSpeedometer = ({
   score,
   quality,
   showScore,
-  timestamp,
+  date,
 }: {
   score: number;
   quality?: string;
   showScore?: boolean;
-  timestamp?: number;
+  date?: string;
 }) => {
   const [randomNumber, setRandomNumber] = useState<string | null>("300");
   const rotationCalculator = (scr: number) => {
@@ -126,7 +126,7 @@ const ScoreSpeedometer = ({
           <div className="text-4xl sm:text-6xl font-bold z-40 mt-48 sm:-mt-52 tracking-tighter">
             {showScore ? score : randomNumber}
           </div>
-          {timestamp && <p className="mt-5">Score stored on: {timestamp}</p>}
+          {date && <p className="mt-5">Score stored on: {date}</p>}
           {quality && (
             <div
               style={{ backgroundColor: renderTagBgColor(quality) }}

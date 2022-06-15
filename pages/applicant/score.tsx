@@ -14,6 +14,7 @@ import {
   IScoreResponsePlaid,
 } from "@nearoracle/src/types/types";
 import { useSetStatus } from "@nearoracle/src/components/score/hooks";
+import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
 
 const ApplicantScorePage = () => {
   const {
@@ -24,10 +25,8 @@ const ApplicantScorePage = () => {
     handleSetChainActivity,
   } = useContext(NearContext);
 
-  const [
-    { statusLoading, statusSuccess },
-    { setLoadingStatus, setErrorStatus, setSuccessStatus },
-  ] = useSetStatus();
+  const [{ statusLoading, statusSuccess }, { setSuccessStatus }] =
+    useSetStatus();
 
   const [showScore, setShowScore] = useState<boolean>(false);
   const [showScoreDescription, setShowScoreDescription] = useState(false);
@@ -35,7 +34,6 @@ const ApplicantScorePage = () => {
 
   const queryTransactionHash = router?.query?.transactionHashes;
   const queryErrorCode = router?.query?.errorCode;
-  const queryScoreSubmitted = router?.query?.scoreSubmitted;
 
   const renderProvider = (
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
@@ -51,7 +49,7 @@ const ApplicantScorePage = () => {
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
   ) => {
     if (scoreResponse) {
-      // This redirects to the Wallet SDK, and once approved, redirect back to the app with a transactionHashes query parameter.
+      // This redirects to the Wallet SDK, and once the transaction has been approved, redirects back to the app with a transactionHashes query parameter.
       await contract?.store_score({
         callbackUrl: `${process.env.NEXT_BASE_URL}/applicant/score`,
         args: {
@@ -62,6 +60,7 @@ const ApplicantScorePage = () => {
     }
   };
 
+  // Whene there's a transactionHashes query parameter, save the chain acitivity in the localStroage.
   useEffect(() => {
     queryTransactionHash &&
       handleSetChainActivity({
@@ -109,7 +108,7 @@ const ApplicantScorePage = () => {
     );
   }, []);
 
-  return (
+  const mainScoreContainer = (
     <div className="px-14 py-10 w-full text-center">
       {queryTransactionHash ? (
         <ScoreSaved />
@@ -141,11 +140,17 @@ const ApplicantScorePage = () => {
             }}
           />
 
-          {queryScoreSubmitted ? (
-            <p className="text-lg mt-3 font-semibold">
-              {" "}
-              Score has already been saved to the blockchain.
-            </p>
+          {statusSuccess ? (
+            <>
+              <p className="text-lg mt-3 font-semibold">
+                {" "}
+                Score has already been saved to the blockchain.
+              </p>
+              <Button
+                text="Calculate score with other validators"
+                onClick={() => router.push("/applicant")}
+              />
+            </>
           ) : (
             <Button
               text="Save score to blockchain"
@@ -182,6 +187,16 @@ const ApplicantScorePage = () => {
         </>
       )}
     </div>
+  );
+
+  return (
+    <>
+      {statusLoading ? (
+        <LoadingContainer text="Submitting score to the blockchain." />
+      ) : (
+        mainScoreContainer
+      )}
+    </>
   );
 };
 

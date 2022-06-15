@@ -5,7 +5,10 @@ export const LoadingContainer = ({
 }: {
   text: String;
 }) => (
-  <div className="w-full flex-col flex justify-center items-center z-50">
+  <div
+    className="w-full flex flex-col justify-center items-center z-50"
+    style={{ height: "500px" }}
+  >
     <ClipLoader
       speedMultiplier={0.75}
       size={120}

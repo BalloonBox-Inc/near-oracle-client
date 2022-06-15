@@ -12,9 +12,9 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div>
-        <div className="w-full text-center px-5 sm:px-10 lg:text-left lg:w-1/2 flex flex-col">
-          <h1 className="text-4xl lg:text-5xl font-bold leading-tight mt-20 lg:mt-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:py-40 py-10">
+        <div className="w-full text-center md:text-left px-5">
+          <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
             {" "}
             A credit scoring oracle on Near Protocol
           </h1>
@@ -41,6 +41,7 @@ const Home: NextPage = () => {
             <Button style={BUTTON_STYLES.OUTLINE} text="Learn more" />
           </div>
         </div>
+        <div></div>
       </div>
     </>
   );

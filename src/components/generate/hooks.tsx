@@ -65,3 +65,42 @@ export function useHandleSdk() {
 
   return [startPlaidLink, startCoinbase, handlers] as const;
 }
+
+export function useHandleExistingScore() {
+  const [isExistingScore, setIsExistingScore] = useState<
+    "loading" | true | false
+  >("loading");
+
+  const handlers = useMemo(() => {
+    return {
+      setExistingScoreToTrue: () => setIsExistingScore(true),
+      setExistingScoreToFalse: () => setIsExistingScore(false),
+    };
+  }, []);
+
+  const existingScoreIsLoading = isExistingScore === "loading";
+  const scoreExists = !!isExistingScore;
+
+  return [existingScoreIsLoading, scoreExists, handlers] as const;
+}
+
+export function useManageExistingScore({
+  chainActivity,
+  setExistingScoreToTrue,
+  setExistingScoreToFalse,
+  queryType,
+  router,
+}: any) {
+  useEffect(() => {
+    if (chainActivity?.scoreSubmitted) {
+      setExistingScoreToTrue();
+      !!queryType && router.replace("/applicant/generate");
+    } else setExistingScoreToFalse();
+  }, [
+    chainActivity,
+    queryType,
+    router,
+    setExistingScoreToFalse,
+    setExistingScoreToTrue,
+  ]);
+}

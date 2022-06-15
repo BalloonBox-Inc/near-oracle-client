@@ -30,7 +30,9 @@ const Connect = ({ showAccount, setShowAccount }: any) => {
       {!isConnected && <div>Connect</div>}
       {showAccount && (
         <div className="flex justify-center items-center">
-          <div className="mr-2 flex items-center">{wallet?.getAccountId()}</div>{" "}
+          <div className="mr-2 flex items-center text-xs sm:text-sm">
+            {wallet?.getAccountId()}
+          </div>{" "}
           <DisconnectOutlined
             onClick={(e) => {
               e.stopPropagation();

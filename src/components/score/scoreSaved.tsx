@@ -1,10 +1,9 @@
 import Lottie from "react-lottie";
 import { useRouter } from "next/router";
 
-import Button from "src/components/Button";
-import ServiceSelector from "src/components/ServiceSelector";
-
-import checkMarkAnimations from "@nearoracle/src/components/Lottie/check-mark";
+import Button from "@nearoracle/src/components/Button";
+import ServiceSelector from "@nearoracle/src/components/ServiceSelector";
+import checkMarkAnimations from "@nearoracle/src/components/Lottie/check-mark.json";
 
 const scoreSaved = () => {
   const router = useRouter();
@@ -24,7 +23,7 @@ const scoreSaved = () => {
       <div className="justify-center items-center flex flex-col ">
         <ServiceSelector
           text="View my score"
-          onClick={() => router.push("/applicant/score?scoreSubmitted=true")}
+          onClick={() => router.push("/applicant/score")}
         />
         <ServiceSelector
           text="Go back to the menu"

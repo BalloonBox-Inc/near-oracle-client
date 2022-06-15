@@ -8,18 +8,24 @@ import {
   useHandleAwaitingScoreResponse,
   useHandleSdk,
   useManageQuery,
+  useHandleExistingScore,
+  useManageExistingScore,
 } from "@nearoracle/src/components/generate/hooks";
 import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
 
 import { NearContext } from "@nearoracle/src/context";
 import PlaidLink from "@nearoracle/src/components/plaid";
 import ScoreResponseModal from "@nearoracle/src/components/generate/ScoreResponseModal";
+import ExistingScoreModal from "@nearoracle/src/components/generate/ExistingScoreModal";
+import { INearContext } from "@nearoracle/src/context";
+interface IGenerateScorePage {
+  chainActivity: INearContext["chainActivity"];
+}
 
-export const GenerateScore = () => {
+export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
   const router = useRouter();
   const queryType = router?.query?.type;
   const queryStatus = router?.query?.status;
-
   const [awaitingScoreResponse, { setToWaiting, setNotWaiting }] =
     useHandleAwaitingScoreResponse();
   const [
@@ -28,8 +34,26 @@ export const GenerateScore = () => {
     { setStartPlaidLink, setStartCoinbase, setSdkUndefined },
   ] = useHandleSdk();
 
-  const { plaidPublicToken, setPlaidPublicToken, setScoreResponse } =
-    useContext(NearContext);
+  const [
+    existingScoreIsLoading,
+    scoreExists,
+    { setExistingScoreToTrue, setExistingScoreToFalse },
+  ] = useHandleExistingScore();
+
+  const {
+    plaidPublicToken,
+    setPlaidPublicToken,
+    setScoreResponse,
+    handleSetChainActivity,
+  } = useContext(NearContext);
+
+  useManageExistingScore({
+    chainActivity,
+    setExistingScoreToTrue,
+    setExistingScoreToFalse,
+    queryType,
+    router,
+  });
 
   useManageQuery({ router, setStartCoinbase, setToWaiting });
 
@@ -66,6 +90,14 @@ export const GenerateScore = () => {
     }
   };
 
+  if (existingScoreIsLoading) {
+    return (
+      <div className="px-14 py-10">
+        <LoadingContainer text={""} />
+      </div>
+    );
+  }
+
   return (
     <div className="text-white">
       {queryStatus === "success" && (
@@ -76,7 +108,9 @@ export const GenerateScore = () => {
           startOver={startOver}
         />
       )}
-      {awaitingScoreResponse && <LoadingContainer text="Loading.." />}
+      {awaitingScoreResponse && (
+        <LoadingContainer text="Calculating your score..this may take a minute" />
+      )}
       {!awaitingScoreResponse && (
         <MainContainer
           setStartCoinbase={setStartCoinbase}
@@ -99,12 +133,21 @@ export const GenerateScore = () => {
           setStartPlaidLink={setStartPlaidLink}
         />
       )}
+      {scoreExists && (
+        <ExistingScoreModal
+          scoreExists={scoreExists}
+          startOver={startOver}
+          handleSetChainActivity={handleSetChainActivity}
+          chainActivity={chainActivity}
+        />
+      )}
     </div>
   );
 };
 
 export const GenerateScorePage = () => {
-  return <GenerateScore />;
+  const { chainActivity } = useContext(NearContext);
+  return <GenerateScore chainActivity={chainActivity} />;
 };
 
 export default GenerateScorePage;

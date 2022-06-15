@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import router from "next/router";
 
 import Button, { BUTTON_STYLES } from "@nearoracle/src/components/Button";
+import { IChainActivity } from "@nearoracle/src/context";
 
 const ExistingScoreModal = ({
   scoreExists,
@@ -11,6 +12,8 @@ const ExistingScoreModal = ({
 }: {
   scoreExists: boolean;
   startOver: () => void;
+  chainActivity: IChainActivity;
+  handleSetChainActivity: (a: IChainActivity | null) => void;
 }) => {
   return (
     <Modal footer={null} centered closable={false} visible={scoreExists}>
@@ -19,8 +22,8 @@ const ExistingScoreModal = ({
           data-testid="existing-score"
           className="text-base text-center font-semibold"
         >
-          You have already submitted a score using {chainActivity?.dataProvider}
-          .
+          You have already submitted a score using{" "}
+          <span className="text-gray-400">{chainActivity?.dataProvider}</span>.
         </p>
       </div>
       <div className="flex w-full justify-center items-center space-x-4">
