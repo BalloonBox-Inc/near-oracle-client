@@ -6,7 +6,7 @@ import TestBanner from "../TestBanner";
 
 export default function Header() {
   const [showAccount, setShowAccount] = useState<boolean>(false);
-  const isConnected = useContext(NearContext);
+  const { isConnected } = useContext(NearContext);
   return (
     <>
       <TestBanner />

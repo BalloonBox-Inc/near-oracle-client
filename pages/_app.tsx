@@ -4,14 +4,20 @@ import { NearProvider } from "@nearoracle/src/context";
 import Layout from "@nearoracle/src/components/Layout";
 
 import "antd/dist/antd.dark.min.css";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NearProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </NearProvider>
+    <>
+      <Head>
+        <title>NearOracle</title>
+      </Head>
+      <NearProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </NearProvider>
+    </>
   );
 }
 
