@@ -18,6 +18,35 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+
+### Credentials Required
+
+The dApp requires eitehr a NEAR [testnet](https://wallet.testnet.near.org/) or [mainnet](https://wallet.near.org/) wallet.
+
+You will also need to create an account on [Plaid](https://dashboard.plaid.com/) OR [Coinbase](https://developers.coinbase.com/) in order to receive client ids and client secrets for your api. 
+
+Create a .env.local file in your root folder:
+
+```
+NEXT_BASE_URL=http://localhost:3000
+
+COINBASE_CLIENT_ID=your_client_Id
+COINBASE_CLIENT_SECRET=your_client_secret
+COINBASE_AUTHORIZE_URL=https://www.coinbase.com/oauth/authorize
+COINBASE_TOKEN_URL=https://api.coinbase.com/oauth/token
+
+PLAID_CLIENT_ID=your_client_id
+PLAID_URL_SANDBOX=sandbox.plaid.com
+PLAID_SECRET_KEY_SANDBOX=your_sandbox_key
+
+BACKEND_BASE_URL=https://dev-near-oracle-backend.herokuapp.com
+COINMARKET_KEY=your_coinmarketcapapikey
+```
+
+Then, you can run locally in development mode with live reload. Ensure you run this command after `cd` into the local folder where you cloned the repo.
+
+
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
