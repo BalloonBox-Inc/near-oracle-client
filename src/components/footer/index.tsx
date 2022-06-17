@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
-      className={`py-3 px-10 w-full flex flex-row text-white justify-between font-sans absolute bottom-0`}
+      className={`py-3 px-10 w-full flex flex-row text-white justify-between font-sans`}
       style={{
         height: "5rem",
       }}

@@ -64,12 +64,14 @@ export enum CHAIN_ACTIVITIES {
   dataProvider = "dataProvider",
   scoreAmount = "scoreAmount",
   scoreMessage = "scoreMessage",
+  txHashes = "txHashes",
 }
 export interface IChainActivity {
   [CHAIN_ACTIVITIES.scoreSubmitted]?: boolean;
   [CHAIN_ACTIVITIES.dataProvider]?: "coinbase" | "plaid";
   [CHAIN_ACTIVITIES.scoreAmount]?: number;
   [CHAIN_ACTIVITIES.scoreMessage]?: string;
+  [CHAIN_ACTIVITIES.txHashes]?: any;
 }
 
 export const CHAIN_ACTIVITIES_INIT = {
@@ -77,6 +79,7 @@ export const CHAIN_ACTIVITIES_INIT = {
   dataProvider: undefined,
   scoreAmount: undefined,
   scoreMessage: undefined,
+  txHashes: undefined,
 };
 
 export const storageHelper = {
@@ -267,6 +270,15 @@ const ContextProvider = ({ children }: any) => {
     setChainActivity(storageHelper.get("chainActivity"));
     setLoading(false);
   }, []);
+
+  const accountIdQuery = router.query.account_id;
+
+  useEffect(() => {
+    if (accountIdQuery) {
+      notification.success({ message: "Successfully connected wallet!" });
+      router.replace("/");
+    }
+  }, [router]);
 
   // redirect to the NEAR wallet SDK
   const handleSignIn = () => {

@@ -35,7 +35,6 @@ const ViewScore = () => {
         account_id: id,
       });
 
-      console.log(response);
       const scoresArray = response?.scores;
       const scoresArrayLength = response?.scores.length;
       // Get the latest score stored
@@ -65,7 +64,7 @@ const ViewScore = () => {
       {queryAccountId && accountInfo && (
         <div className="text-center sm:p-10">
           <h2 className="z-30 font-semibold text-xl sm:text-3xl p-0">
-            {accountId}'s credit score
+            {accountId}'s Credit Score
           </h2>
           <ScoreSpeedometer
             score={accountInfo?.score}
@@ -78,7 +77,7 @@ const ViewScore = () => {
           </div>
 
           <Button
-            text="Get other score"
+            text="Get another applicant's score"
             onClick={() => router.push("/provider")}
           />
         </div>
@@ -88,11 +87,13 @@ const ViewScore = () => {
         <>
           <div className="text-center z-30 px-0 sm:p-10">
             <h2 className="z-30 font-semibold text-xl sm:text-3xl p-0">
-              View your applicant's score
+              View an Applicant's Score
             </h2>
             <div className="w-full px-10 md:px-40">
               <form className="flex flex-col mt-10">
-                <label className="text-left mb-2">Applicant's account id</label>
+                <label className="text-left mb-2">
+                  Applicant's NEAR Wallet ID
+                </label>
                 <input
                   className="bg-zinc-800 rounded py-3 px-3"
                   type="text"

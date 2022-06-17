@@ -82,6 +82,7 @@ export default async function handler(
         loan_request: 10000
       };
 
+
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 
       if (plaid_score_res.status === "error") {

@@ -108,7 +108,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
         />
       )}
       {awaitingScoreResponse && (
-        <LoadingContainer text="Calculating your score..this may take a minute" />
+        <LoadingContainer text="Calculating your score. This may take a minute." />
       )}
       {!awaitingScoreResponse && (
         <MainContainer

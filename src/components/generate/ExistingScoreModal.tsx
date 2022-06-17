@@ -23,7 +23,7 @@ const ExistingScoreModal = ({
           className="text-base text-center font-semibold"
         >
           You have already submitted a score using{" "}
-          <span className="text-gray-400">{chainActivity?.dataProvider}</span>.
+          <span className="text-zinc-400">{chainActivity?.dataProvider}.</span>
         </p>
       </div>
       <div className="flex w-full justify-center items-center space-x-4">

@@ -24,7 +24,7 @@ const ProviderServicesPage = () => {
             <ServiceSelector
               selected={selection === "view"}
               onClick={() => setSelection("view")}
-              text="View your applicant's score"
+              text="View an applicant's score"
             />
           </div>
         </div>

@@ -9,7 +9,7 @@ export default function Header() {
   const [showAccount, setShowAccount] = useState<boolean>(false);
   const { isConnected } = useNearContext();
   return (
-    <>
+    <div>
       <TestBanner />
       <header
         className="flex items-center justify-between w-full py-4 px-10"
@@ -41,6 +41,6 @@ export default function Header() {
           <Connect showAccount={showAccount} setShowAccount={setShowAccount} />
         </div>
       </header>
-    </>
+    </div>
   );
 }

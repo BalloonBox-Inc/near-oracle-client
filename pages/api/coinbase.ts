@@ -39,6 +39,7 @@ export default async function handler(
         loan_request: 10000,
       };
 
+
       const backend_response = await fetch(COINBASE_ENDPOINT, {
         method: "POST",
         headers: {
