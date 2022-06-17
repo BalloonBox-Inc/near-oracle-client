@@ -6,8 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
+    "prepare": "husky install",
     "lint": "next lint",
-    "lint:ts": "tslint --project tsconfig.json --config tslint.json"
+    "lint:ts": "tslint --project tsconfig.json --config tslint.json",
+    "check-types": "tsc --pretty --noEmit"
   },
   "lint-staged": {
     "*.ts": "yarn lint:ts",

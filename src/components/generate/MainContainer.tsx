@@ -4,7 +4,15 @@ import NavigationButtons from "@nearoracle/src/components/NavigationButtons";
 import ServiceSelector from "@nearoracle/src/components/ServiceSelector";
 import { useHandleSelection } from "@nearoracle/src/components/generate/hooks";
 
-const MainContainer = ({ setStartCoinbase, handlePlaidConnect }) => {
+interface IMainContainerProps {
+  handlePlaidConnect: () => void;
+  setStartCoinbase: () => void;
+}
+
+const MainContainer = ({
+  setStartCoinbase,
+  handlePlaidConnect,
+}: IMainContainerProps) => {
   const router = useRouter();
 
   const [
