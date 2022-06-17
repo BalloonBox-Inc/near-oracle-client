@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useContext } from "react";
+import { useCallback, useEffect } from "react";
 
 import { notification } from "antd";
 import { NextRouter } from "next/router";
 
-import { NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 import { handleCoinbaseCode } from "@nearoracle/src/services";
 
 const Coinbase = ({
@@ -18,7 +18,7 @@ const Coinbase = ({
   setNotWaiting: () => void;
 }) => {
   const { setScoreResponse, setCoinbaseToken, scoreResponse, coinbaseToken } =
-    useContext(NearContext);
+    useNearContext();
 
   // 1. redirect to the SDK
   const getCoinbaseSdkUrl = useCallback(async () => {
@@ -32,7 +32,7 @@ const Coinbase = ({
 
   // hit the backend to get the score calculated
   const fetchCoinbaseWithToken = useCallback(
-    async ({ access_token, refresh_token }) => {
+    async ({ access_token, refresh_token }: any) => {
       const coinbaseRes = await fetch(
         `/api/coinbase?access_token=${access_token}&refresh_token=${refresh_token}`
       );

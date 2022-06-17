@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { useState } from "react";
+
 import Connect from "@nearoracle/src/components/connect";
-import { useState, useContext } from "react";
-import { INearContext, NearContext } from "@nearoracle/src/context";
-import TestBanner from "../TestBanner";
+import TestBanner from "@nearoracle/src/components/TestBanner";
+import { useNearContext } from "@nearoracle/src/context";
 
 export default function Header() {
   const [showAccount, setShowAccount] = useState<boolean>(false);
-  const { isConnected } = useContext(NearContext);
+  const { isConnected } = useNearContext();
   return (
     <>
       <TestBanner />

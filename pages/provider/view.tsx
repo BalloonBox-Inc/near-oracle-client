@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { notification } from "antd";
 
 import NavigationButtons from "@nearoracle/src/components/NavigationButtons";
-import { NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 import ScoreSpeedometer from "@nearoracle/src/components/score";
 
 import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
@@ -14,11 +14,12 @@ interface IAccountInfo {
   timestamp: number; // in nanoseconds
   description: Array<any>;
 }
+
 const ViewScore = () => {
   const router = useRouter();
   const [accountId, setAccountId] = useState<string | null>(null);
   const [accountInfo, setAccountInfo] = useState<IAccountInfo | null>(null);
-  const { contract } = useContext(NearContext);
+  const { contract } = useNearContext();
   const [loading, setLodaing] = useState(false);
 
   const queryAccountId = router.query.accountId;
@@ -30,9 +31,13 @@ const ViewScore = () => {
   const handleViewScore = async (id: string | null) => {
     setLodaing(true);
     try {
-      const response = await contract?.query_score_history({ account_id: id });
-      const scoresArray = response.scores;
-      const scoresArrayLength = response.scores.length;
+      const response: any = await contract?.query_score_history({
+        account_id: id,
+      });
+
+      console.log(response);
+      const scoresArray = response?.scores;
+      const scoresArrayLength = response?.scores.length;
       // Get the latest score stored
       setAccountInfo(scoresArray[scoresArrayLength - 1]);
       router.push(`/provider/view?accountId=${id}`);
@@ -46,7 +51,7 @@ const ViewScore = () => {
     }
   };
 
-  const covertTimeToDate = (timestamp: number | null) => {
+  const covertTimeToDate = (timestamp: number) => {
     const milliseconds = timestamp / 1000000;
     const dateObject = new Date(milliseconds);
     const convertedTime = dateObject.toLocaleString();

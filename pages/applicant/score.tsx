@@ -5,7 +5,7 @@ import { notification } from "antd";
 import Modal from "antd/lib/modal/Modal";
 
 import ScoreSpeedometer from "@nearoracle/src/components/score";
-import { NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 import Button, { BUTTON_STYLES } from "@nearoracle/src/components/Button";
 import { storageHelper } from "@nearoracle/src/context";
 import ScoreSaved from "@nearoracle/src/components/score/scoreSaved";
@@ -23,7 +23,7 @@ const ApplicantScorePage = () => {
     contract,
     chainActivity,
     handleSetChainActivity,
-  } = useContext(NearContext);
+  } = useNearContext();
 
   const [{ statusLoading, statusSuccess }, { setSuccessStatus }] =
     useSetStatus();

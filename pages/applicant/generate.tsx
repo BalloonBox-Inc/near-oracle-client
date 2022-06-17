@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useContext } from "react";
 import { notification } from "antd";
 
 import Coinbase from "@nearoracle/src/components/Coinbase";
@@ -13,7 +12,7 @@ import {
 } from "@nearoracle/src/components/generate/hooks";
 import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
 
-import { NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 import PlaidLink from "@nearoracle/src/components/plaid";
 import ScoreResponseModal from "@nearoracle/src/components/generate/ScoreResponseModal";
 import ExistingScoreModal from "@nearoracle/src/components/generate/ExistingScoreModal";
@@ -45,7 +44,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
     setPlaidPublicToken,
     setScoreResponse,
     handleSetChainActivity,
-  } = useContext(NearContext);
+  } = useNearContext();
 
   useManageExistingScore({
     chainActivity,
@@ -129,6 +128,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
         <PlaidLink
           token={plaidPublicToken?.publicToken}
           router={router}
+          setToWaiting={setToWaiting}
           setNotWaiting={setNotWaiting}
           setStartPlaidLink={setStartPlaidLink}
         />
@@ -146,7 +146,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
 };
 
 export const GenerateScorePage = () => {
-  const { chainActivity } = useContext(NearContext);
+  const { chainActivity } = useNearContext();
   return <GenerateScore chainActivity={chainActivity} />;
 };
 

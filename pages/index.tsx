@@ -1,13 +1,12 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useContext } from "react";
 
-import { NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 import Button, { BUTTON_STYLES } from "@nearoracle/src/components/Button";
 import Connect from "@nearoracle/src/components/connect";
 
 const Home: NextPage = () => {
-  const { isConnected } = useContext(NearContext);
+  const { isConnected } = useNearContext();
   const router = useRouter();
 
   return (

@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import { DisconnectOutlined, CloseOutlined } from "@ant-design/icons";
-import { INearContext, NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 
 const Connect = ({ showAccount, setShowAccount }: any) => {
-  const { handleSignIn, handleSignOut, isConnected, wallet } =
-    useContext<INearContext>(NearContext);
+  const { handleSignIn, handleSignOut, isConnected, wallet } = useNearContext();
 
   return (
     <div
