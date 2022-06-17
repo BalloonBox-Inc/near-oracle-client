@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { notification } from "antd";
 import {
   PlaidLinkOnSuccessMetadata,
@@ -6,13 +6,26 @@ import {
   PlaidLinkError,
   PlaidLinkOnExitMetadata,
 } from "react-plaid-link";
-
-import { NearContext } from "@nearoracle/src/context";
+import { NextRouter } from "next/router";
+import { useNearContext } from "@nearoracle/src/context";
 import { exchangePlaidToken } from "@nearoracle/src/services";
 
-const PlaidLink = (props) => {
+interface Props {
+  isOauth?: boolean;
+  token: string; // this is the public token (aka link token)
+  userId?: number;
+  itemId?: number | null;
+  children?: React.ReactNode;
+  router: NextRouter;
+  setStartPlaidLink: any;
+  setNotWaiting: () => void;
+  setToWaiting: () => void;
+  plaidOAuthFlowQuery?: string | string[];
+}
+
+const PlaidLink = (props: Props) => {
   const { setPlaidPublicToken, setScoreResponse, scoreResponse } =
-    useContext(NearContext);
+    useNearContext();
 
   const handleError = async (onExit: boolean) => {
     props.setNotWaiting();
@@ -35,8 +48,7 @@ const PlaidLink = (props) => {
       props.router.replace("/applicant/generate?type=plaid&status=success");
       setScoreResponse(plaid_score_res);
     } else {
-      notification.error({ message: "Failed to calculate the score" });
-      props.router.replace("/applicant/generate");
+      handleError(false);
     }
     props.setNotWaiting();
   };

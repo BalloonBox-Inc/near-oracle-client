@@ -1,10 +1,8 @@
 import { keyStores } from "near-api-js";
-import { useEffect, useState } from "react";
 
 // Define the name of the smart contract that we want to interact with
 // This is the name of the account where the smart contract is deployed to.
-const CONTRACT_NAME =
-  process.env.CONTRACT_NAME || "mycontract.myaccount.testnet";
+export const CONTRACT_NAME = process.env.CONTRACT_NAME || "score.bbox.testnet";
 
 // Function that returns a NEAR connection configuration object based on the given environment.
 export const getConfig = (environment = "testnet") => {

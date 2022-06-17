@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import { DisconnectOutlined, CloseOutlined } from "@ant-design/icons";
-import { INearContext, NearContext } from "@nearoracle/src/context";
+import { useNearContext } from "@nearoracle/src/context";
 
 const Connect = ({ showAccount, setShowAccount }: any) => {
-  const { handleSignIn, handleSignOut, isConnected, wallet } =
-    useContext<INearContext>(NearContext);
+  const { handleSignIn, handleSignOut, isConnected, wallet } = useNearContext();
 
   return (
     <div
@@ -30,7 +29,9 @@ const Connect = ({ showAccount, setShowAccount }: any) => {
       {!isConnected && <div>Connect</div>}
       {showAccount && (
         <div className="flex justify-center items-center">
-          <div className="mr-2 flex items-center">{wallet?.getAccountId()}</div>{" "}
+          <div className="mr-2 flex items-center text-xs sm:text-sm">
+            {wallet?.getAccountId()}
+          </div>{" "}
           <DisconnectOutlined
             onClick={(e) => {
               e.stopPropagation();

@@ -36,6 +36,7 @@ export default async function handler(
         coinbase_access_token: req.query?.access_token,
         coinbase_refresh_token: req.query?.refresh_token,
         coinmarketcap_key: COINMARKET_KEY,
+        loan_request: 10000,
       };
 
       const backend_response = await fetch(COINBASE_ENDPOINT, {
