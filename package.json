@@ -6,13 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:ts": "tslint --project tsconfig.json --config tslint.json"
+  },
+  "lint-staged": {
+    "*.ts": "yarn lint:ts",
+    "*.tsx": "yarn lint:ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn run test:unit"
+    }
   },
   "dependencies": {
     "@types/react-lottie": "^1.2.6",
     "antd": "^4.20.4",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "husky": "^8.0.1",
     "near-api-js": "^0.44.2",
     "next": "12.1.6",
     "node-fetch": "^3.2.6",

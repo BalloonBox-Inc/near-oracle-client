@@ -1,7 +1,12 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "airbnb"],
   "overrides": [
     {
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
+      "extends": ["airbnb-typescript"],
       "rules": {
         "prettier/prettier": [
           "error",
