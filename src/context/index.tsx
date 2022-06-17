@@ -6,7 +6,6 @@ import React, {
   useContext,
 } from "react";
 import { connect, WalletConnection, Contract, Account } from "near-api-js";
-import { ContractMethods } from "near-api-js/lib/contract";
 import { useRouter } from "next/router";
 import { notification } from "antd";
 
@@ -32,6 +31,7 @@ export type Smart_Contract = {
   account: Account;
   contractId: string;
   query_score_history: (account_id: AccountIdParam) => void;
+  store_score: ({ callbackUrl, args }: any) => void;
 };
 
 export type AccountIdParam = {
