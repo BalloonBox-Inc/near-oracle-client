@@ -11,7 +11,7 @@ const ScoreSpeedometer = ({
   date,
 }: {
   score: number;
-  quality?: string;
+  quality?: any;
   showScore?: boolean;
   date?: string;
 }) => {
