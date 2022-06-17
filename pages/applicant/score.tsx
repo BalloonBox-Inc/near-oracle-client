@@ -15,6 +15,8 @@ import {
 } from "@nearoracle/src/types/types";
 import { useSetStatus } from "@nearoracle/src/components/score/hooks";
 import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
+import NavigationButtons from "@nearoracle/src/components/NavigationButtons";
+import getConfig from "@nearoracle/src/utils/config";
 
 const ApplicantScorePage = () => {
   const {
@@ -34,6 +36,8 @@ const ApplicantScorePage = () => {
 
   const queryTransactionHash = router?.query?.transactionHashes;
   const queryErrorCode = router?.query?.errorCode;
+
+  const config = getConfig();
 
   const renderProvider = (
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
@@ -70,6 +74,7 @@ const ApplicantScorePage = () => {
         dataProvider: scoreResponse?.endpoint.includes("plaid")
           ? "plaid"
           : "coinbase",
+        txHashes: queryTransactionHash,
       });
   }, [queryTransactionHash]);
 
@@ -111,7 +116,7 @@ const ApplicantScorePage = () => {
   const mainScoreContainer = (
     <div className="px-14 py-10 w-full text-center">
       {queryTransactionHash ? (
-        <ScoreSaved />
+        <ScoreSaved transactionHashes={queryTransactionHash} config={config} />
       ) : (
         <>
           <h2 className="z-40 font-semibold text-xl sm:text-4xl mb-1">
@@ -144,12 +149,23 @@ const ApplicantScorePage = () => {
             <>
               <p className="text-lg mt-3 font-semibold">
                 {" "}
-                Score has already been saved to the blockchain.
+                Your score has already been saved to the blockchain.
               </p>
-              <Button
-                text="Calculate score with other validators"
-                onClick={() => router.push("/applicant")}
-              />
+              <a
+                href={`${config.explorerUrl}/transactions/${chainActivity.txHashes}`}
+                target="_blank"
+              >
+                <Button
+                  text=" View on NEAR Explorer"
+                  style={BUTTON_STYLES.OUTLINE}
+                />
+              </a>
+              <div className="mt-2">
+                <Button
+                  text="Get score with other validators"
+                  onClick={() => router.push("/applicant")}
+                />
+              </div>
             </>
           ) : (
             <Button
@@ -157,6 +173,7 @@ const ApplicantScorePage = () => {
               onClick={() => handleSetScore(scoreResponse)}
             />
           )}
+          <NavigationButtons backHandler={() => router.push("/applicant")} />
           <Modal
             visible={showScoreDescription}
             footer={null}

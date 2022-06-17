@@ -27,7 +27,7 @@ const MainContainer = ({
           Choose a Provider
         </h2>
         <p className="z-30 font-base text-md sm:text-lg md:text-lg lg:text-xl">
-          Select one of the following providers to qualify for a credit check.
+          Select one of the following providers to get a credit score.
         </p>
       </div>
       <div className="flex flex-col justify-center items-center">

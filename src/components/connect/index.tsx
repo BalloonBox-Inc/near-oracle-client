@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { message } from "antd";
 import { DisconnectOutlined, CloseOutlined } from "@ant-design/icons";
 import { useNearContext } from "@nearoracle/src/context";
 
@@ -29,7 +30,20 @@ const Connect = ({ showAccount, setShowAccount }: any) => {
       {!isConnected && <div>Connect</div>}
       {showAccount && (
         <div className="flex justify-center items-center">
-          <div className="mr-2 flex items-center text-xs sm:text-sm">
+          <div
+            className="mr-2 flex items-center text-xs sm:text-sm hover:text-gray-300"
+            onClick={() => {
+              navigator.clipboard.writeText(wallet?.getAccountId());
+              message.success({
+                content: "Copied to clipboard!",
+                className:
+                  "absolute top-10 right-0 justify-center items-center",
+                style: {
+                  borderRadius: "20px",
+                },
+              });
+            }}
+          >
             {wallet?.getAccountId()}
           </div>{" "}
           <DisconnectOutlined

@@ -1,6 +1,5 @@
 import Header from "@nearoracle/src/components/header";
 import Footer from "@nearoracle/src/components/footer";
-import { callbackify } from "util";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,12 +7,9 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex flex-col w-full min-h-screen relative font-sans bg-black bg-cover">
+    <div className="flex flex-col w-full min-h-screen font-sans bg-black bg-cover justify-between">
       <Header />
-      <main
-        className="px-5 md:px-10 2xl:px-40 md:pt-0 pt-10"
-        style={{ paddingBottom: "5rem" }}
-      >
+      <main className="w-full px-5 md:px-10 2xl:px-40 md:pt-0 pt-10">
         {children}
       </main>
       <Footer />

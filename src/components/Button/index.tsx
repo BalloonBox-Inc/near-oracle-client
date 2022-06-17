@@ -51,7 +51,7 @@ export default function Button({
       "inline-flex justify-center py-2 px-6 text-sm rounded-3xl focus:outline-none":
         style !== BUTTON_STYLES.LINK,
       "hover:opacity-75 text-sm underline": style === BUTTON_STYLES.LINK,
-      "text-white border-solid border-2 border-white py-2 cursor-pointer":
+      "text-white border-solid border-2 border-white py-2 cursor-pointer hover:bg-zinc-800":
         style === BUTTON_STYLES.OUTLINE,
       "text-white btn-gradient hover:opacity-75 cursor-pointer min-w-4 gradient-outline ":
         style === BUTTON_STYLES.DEFAULT,
@@ -77,13 +77,6 @@ export default function Button({
       )}
     </button>
   );
-
-  //   const renderBackground = () => {
-  //     if (style === BUTTON_STYLES.LINK) {
-  //       return "transparent";
-  //     }
-  //     return !isDisabled && !isLoading ? BORDER_GRADIENT_STYLE : "#718096";
-  //   };
 
   return (
     <div
