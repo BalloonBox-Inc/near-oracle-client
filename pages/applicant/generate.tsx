@@ -1,24 +1,25 @@
 import { useRouter } from "next/router";
 import { notification } from "antd";
 
-import Coinbase from "@nearoracle/src/components/Coinbase";
-import MainContainer from "@nearoracle/src/components/generate/MainContainer";
+import Coinbase from '@nearoracle/src/components/Coinbase';
+import Covalent from '@nearoracle/src/components/Covalent';
+import MainContainer from '@nearoracle/src/components/generate/MainContainer';
 import {
   useHandleAwaitingScoreResponse,
   useHandleSdk,
   useManageQuery,
   useHandleExistingScore,
   useManageExistingScore,
-} from "@nearoracle/src/components/generate/hooks";
-import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
+} from '@nearoracle/src/components/generate/hooks';
+import { LoadingContainer } from '@nearoracle/src/components/LoadingContainer';
 
-import { useNearContext } from "@nearoracle/src/context";
-import PlaidLink from "@nearoracle/src/components/plaid";
-import ScoreResponseModal from "@nearoracle/src/components/generate/ScoreResponseModal";
-import ExistingScoreModal from "@nearoracle/src/components/generate/ExistingScoreModal";
-import { INearContext } from "@nearoracle/src/context";
+import { useNearContext } from '@nearoracle/src/context';
+import PlaidLink from '@nearoracle/src/components/plaid';
+import ScoreResponseModal from '@nearoracle/src/components/generate/ScoreResponseModal';
+import ExistingScoreModal from '@nearoracle/src/components/generate/ExistingScoreModal';
+import { INearContext } from '@nearoracle/src/context';
 interface IGenerateScorePage {
-  chainActivity: INearContext["chainActivity"];
+  chainActivity: INearContext['chainActivity'];
 }
 
 export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
@@ -30,7 +31,8 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
   const [
     startPlaidLink,
     startCoinbase,
-    { setStartPlaidLink, setStartCoinbase, setSdkUndefined },
+    startCovalent,
+    { setStartPlaidLink, setStartCoinbase, setStartCovalent, setSdkUndefined },
   ] = useHandleSdk();
 
   const [
@@ -56,7 +58,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
 
   useManageQuery({ router, setStartCoinbase, setToWaiting });
 
-  const connectionError = (client: "coinbase" | "plaid" | string) =>
+  const connectionError = (client: 'coinbase' | 'plaid' | string) =>
     notification.error({
       message: `There was an error. Please re-connect to ${client}.`,
     });
@@ -66,54 +68,54 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
     setNotWaiting();
     setScoreResponse(null);
     setPlaidPublicToken(null);
-    router.replace("/applicant/generate");
+    router.replace('/applicant/generate');
   };
 
   const handlePlaidConnect = async () => {
     if (plaidPublicToken) {
       setStartPlaidLink();
-      router.replace("/applicant/generate?type=plaid&status=success");
+      router.replace('/applicant/generate?type=plaid&status=success');
     } else {
-      router.replace("/applicant/generate?type=plaid&status=loading");
+      router.replace('/applicant/generate?type=plaid&status=loading');
       try {
         setToWaiting();
-        const plaidRes = await fetch("/api/plaid");
+        const plaidRes = await fetch('/api/plaid');
         const plaidResJson = await plaidRes.json();
         if (plaidResJson?.link_token) {
           setStartPlaidLink();
           setPlaidPublicToken({ publicToken: plaidResJson.link_token });
         }
       } catch (error) {
-        connectionError("plaid");
+        connectionError('plaid');
       }
     }
   };
-
   if (existingScoreIsLoading) {
     return (
-      <div className="px-14 py-10">
-        <LoadingContainer text={""} />
+      <div className='px-14 py-10'>
+        <LoadingContainer text={''} />
       </div>
     );
   }
 
   return (
-    <div className="text-white">
-      {queryStatus === "success" && (
+    <div className='text-white'>
+      {queryStatus === 'success' && (
         <ScoreResponseModal
           queryStatus={queryStatus}
           queryType={queryType}
-          pushToScore={() => router.push("/applicant/score")}
+          pushToScore={() => router.push('/applicant/score')}
           startOver={startOver}
         />
       )}
       {awaitingScoreResponse && (
-        <LoadingContainer text="Calculating your score. This may take a minute." />
+        <LoadingContainer text='Calculating your score. This may take a minute.' />
       )}
       {!awaitingScoreResponse && (
         <MainContainer
           setStartCoinbase={setStartCoinbase}
           handlePlaidConnect={handlePlaidConnect}
+          setStartCovalent={setStartCovalent}
         />
       )}
       {startCoinbase && (
@@ -133,6 +135,14 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
           setStartPlaidLink={setStartPlaidLink}
         />
       )}
+      {startCovalent && (
+        <Covalent
+          setToWaiting={setToWaiting}
+          setNotWaiting={setNotWaiting}
+          router={router}
+        />
+      )}
+
       {scoreExists && (
         <ExistingScoreModal
           scoreExists={scoreExists}

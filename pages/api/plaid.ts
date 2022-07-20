@@ -22,6 +22,7 @@ const clientConfig = new Configuration({
 
 export interface ITokenExchangeProps {
   publicToken: string;
+  loanRequest: number;
 }
 
 const config = {
@@ -79,9 +80,8 @@ export default async function handler(
         plaid_client_id: PLAID_CLIENT_ID,
         plaid_client_secret: PLAID_SECRET_KEY_SANDBOX,
         coinmarketcap_key: COINMARKET_KEY,
-        loan_request: 10000
+        loan_request: req.body.loanRequest
       };
-
 
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 

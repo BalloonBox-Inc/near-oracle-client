@@ -42,10 +42,10 @@ const ApplicantScorePage = () => {
   const renderProvider = (
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
   ) => {
-    if (scoreResponse?.endpoint.includes("coinbase")) {
-      return "Coinbase";
-    }
-    return "Plaid";
+    if (scoreResponse?.endpoint.includes('coinbase')) {
+      return 'Coinbase';
+    } else if (scoreResponse?.endpoint.includes('plaid')) return 'Plaid';
+    else return 'Covalent';
   };
 
   // Store the score to the NEAR blockchain
@@ -71,9 +71,7 @@ const ApplicantScorePage = () => {
         scoreAmount: scoreResponse?.score,
         scoreMessage: scoreResponse?.message,
         scoreSubmitted: true,
-        dataProvider: scoreResponse?.endpoint.includes("plaid")
-          ? "plaid"
-          : "coinbase",
+        dataProvider: renderProvider(scoreResponse),
         txHashes: queryTransactionHash,
       });
   }, [queryTransactionHash]);

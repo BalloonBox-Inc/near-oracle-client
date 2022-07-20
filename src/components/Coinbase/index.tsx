@@ -3,8 +3,8 @@ import { useCallback, useEffect } from "react";
 import { notification } from "antd";
 import { NextRouter } from "next/router";
 
-import { useNearContext } from "@nearoracle/src/context";
-import { handleCoinbaseCode } from "@nearoracle/src/services";
+import { storageHelper, useNearContext } from '@nearoracle/src/context';
+import { handleCoinbaseCode } from '@nearoracle/src/services';
 
 const Coinbase = ({
   connectionError,
@@ -23,37 +23,39 @@ const Coinbase = ({
   // 1. redirect to the SDK
   const getCoinbaseSdkUrl = useCallback(async () => {
     setToWaiting();
-    const res = await fetch("/api/coinbase");
+    const res = await fetch('/api/coinbase');
     const resJson = await res.json();
     if (resJson.url) {
       window.location.href = resJson.url;
     }
   }, [setToWaiting]);
 
+  const loanRequest = storageHelper.get('loanRequest');
+
   // hit the backend to get the score calculated
   const fetchCoinbaseWithToken = useCallback(
     async ({ access_token, refresh_token }: any) => {
       const coinbaseRes = await fetch(
-        `/api/coinbase?access_token=${access_token}&refresh_token=${refresh_token}`
+        `/api/coinbase?access_token=${access_token}&refresh_token=${refresh_token}&loan_request=${loanRequest}`
       );
 
       const { coinbaseScore } = await coinbaseRes.json();
 
-      if (coinbaseScore?.status === "success") {
+      if (coinbaseScore?.status === 'success') {
         setScoreResponse(coinbaseScore);
-        router.replace("/applicant/generate?type=coinbase&status=success");
+        router.replace('/applicant/generate?type=coinbase&status=success');
       } else if (
-        coinbaseScore?.message === "The access token expired" ||
-        coinbaseScore?.message === "The access token is invalid"
+        coinbaseScore?.message === 'The access token expired' ||
+        coinbaseScore?.message === 'The access token is invalid'
       ) {
         setScoreResponse(null);
         getCoinbaseSdkUrl();
       } else {
         setScoreResponse(null);
-        router.replace("/applicant/generate");
+        router.replace('/applicant/generate');
         setNotWaiting();
         notification.error({
-          message: "Error connecting to Coinbase, try again later",
+          message: 'Error connecting to Coinbase, try again later',
         });
       }
     },
@@ -76,7 +78,7 @@ const Coinbase = ({
     const handleCoinbaseConnect = async () => {
       // check if access token + refresh token exist in cache
       if (coinbaseToken?.access_token && !accessTokenExpired()) {
-        router.replace("/applicant/generate?type=coinbase&status=loading");
+        router.replace('/applicant/generate?type=coinbase&status=loading');
         fetchCoinbaseWithToken({
           access_token: coinbaseToken.access_token,
           refresh_token: coinbaseToken.refresh_token,
@@ -84,8 +86,8 @@ const Coinbase = ({
         return;
       }
       // check if we have a score calculated with CB in storage
-      if (scoreResponse?.endpoint?.includes("coinbase")) {
-        router.replace("/applicant/generate?type=coinbase&status=success");
+      if (scoreResponse?.endpoint?.includes('coinbase')) {
+        router.replace('/applicant/generate?type=coinbase&status=success');
       } else {
         // Trigger SDK
         getCoinbaseSdkUrl();
@@ -98,12 +100,12 @@ const Coinbase = ({
     const getCoinbaseTokens = async (code: string) => {
       try {
         // 2. send the code we got from the SDK to retrieve access_token + refresh_token
-        router.replace("/applicant/generate");
+        router.replace('/applicant/generate');
         const resJson = await handleCoinbaseCode(code);
 
         if (resJson.access_token) {
           setCoinbaseToken(resJson);
-          router.replace("/applicant/generate?type=coinbase&status=loading");
+          router.replace('/applicant/generate?type=coinbase&status=loading');
           fetchCoinbaseWithToken({
             access_token: resJson.access_token,
             refresh_token: resJson.refresh_token,
@@ -111,11 +113,11 @@ const Coinbase = ({
           return;
         }
         if (resJson.error) {
-          connectionError("coinbase");
+          connectionError('coinbase');
         }
       } catch (error) {
-        router.replace("/applicant/generate");
-        connectionError("coinbase");
+        router.replace('/applicant/generate');
+        connectionError('coinbase');
       }
     };
 
