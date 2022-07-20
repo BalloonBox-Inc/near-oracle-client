@@ -5,15 +5,17 @@ export function useHandleSelection() {
 
   const handlers = useMemo(() => {
     return {
-      setToCoinbase: () => setSelection("coinbase"),
-      setToPlaid: () => setSelection("plaid"),
+      setToCoinbase: () => setSelection('coinbase'),
+      setToPlaid: () => setSelection('plaid'),
+      setToCovalent: () => setSelection('covalent'),
     };
   }, []);
 
   const selections = useMemo(() => {
     return {
-      coinbaseSelected: selection === "coinbase",
-      plaidSelected: selection === "plaid",
+      coinbaseSelected: selection === 'coinbase',
+      plaidSelected: selection === 'plaid',
+      covalentSelected: selection == 'covalent',
       noneSelected: selection === undefined,
     };
   }, [selection]);
@@ -21,6 +23,34 @@ export function useHandleSelection() {
   return [selections, handlers] as const;
 }
 
+export function useHandleTemplateSelection() {
+  const [selection, setSelection] = useState<string | undefined>(undefined);
+
+  const handlers = useMemo(() => {
+    return {
+      setToLow: () => {
+        setSelection('low');
+      },
+      setToMedium: () => {
+        setSelection('medium');
+      },
+      setToHigh: () => {
+        setSelection('high');
+      },
+    };
+  }, []);
+
+  const selections = useMemo(() => {
+    return {
+      lowSelected: selection === 'low',
+      mediumSelected: selection === 'medium',
+      highSelected: selection === 'high',
+      noTemplateSelected: selection == undefined,
+    };
+  }, [selection]);
+
+  return [selections, handlers] as const;
+}
 export function useManageQuery({
   router,
   setStartCoinbase,
@@ -31,7 +61,7 @@ export function useManageQuery({
   }, [router?.query?.code, setStartCoinbase]);
 
   useEffect(() => {
-    router?.query?.status === "loading" && setToWaiting();
+    router?.query?.status === 'loading' && setToWaiting();
   }, [router?.query, setToWaiting]);
 }
 
@@ -54,16 +84,18 @@ export function useHandleSdk() {
 
   const handlers = useMemo(() => {
     return {
-      setStartCoinbase: () => setSdk("coinbase"),
-      setStartPlaidLink: () => setSdk("plaid"),
+      setStartCoinbase: () => setSdk('coinbase'),
+      setStartPlaidLink: () => setSdk('plaid'),
+      setStartCovalent: () => setSdk('covalent'),
       setSdkUndefined: () => setSdk(undefined),
     };
   }, []);
 
-  const startCoinbase = sdk === "coinbase";
-  const startPlaidLink = sdk === "plaid";
+  const startCoinbase = sdk === 'coinbase';
+  const startPlaidLink = sdk === 'plaid';
+  const startCovalent = sdk === 'covalent';
 
-  return [startPlaidLink, startCoinbase, handlers] as const;
+  return [startPlaidLink, startCoinbase, startCovalent, handlers] as const;
 }
 
 export function useHandleExistingScore() {

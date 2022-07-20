@@ -68,7 +68,7 @@ export enum CHAIN_ACTIVITIES {
 }
 export interface IChainActivity {
   [CHAIN_ACTIVITIES.scoreSubmitted]?: boolean;
-  [CHAIN_ACTIVITIES.dataProvider]?: "coinbase" | "plaid";
+  [CHAIN_ACTIVITIES.dataProvider]?: 'Coinbase' | 'Plaid' | 'Covalent';
   [CHAIN_ACTIVITIES.scoreAmount]?: number;
   [CHAIN_ACTIVITIES.scoreMessage]?: string;
   [CHAIN_ACTIVITIES.txHashes]?: any;

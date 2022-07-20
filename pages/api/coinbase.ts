@@ -1,3 +1,4 @@
+import { storageHelper } from "@nearoracle/src/context";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const {
@@ -36,9 +37,8 @@ export default async function handler(
         coinbase_access_token: req.query?.access_token,
         coinbase_refresh_token: req.query?.refresh_token,
         coinmarketcap_key: COINMARKET_KEY,
-        loan_request: 10000,
+        loan_request: req.query?.loan_request,
       };
-
 
       const backend_response = await fetch(COINBASE_ENDPOINT, {
         method: "POST",
