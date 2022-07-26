@@ -112,20 +112,27 @@ const ApplicantScorePage = () => {
   }, []);
 
   const mainScoreContainer = (
-    <div className="px-14 py-10 w-full text-center">
+    <div className='px-14 py-10 w-full flex flex-col items-center text-center'>
       {queryTransactionHash ? (
         <ScoreSaved transactionHashes={queryTransactionHash} config={config} />
       ) : (
         <>
-          <h2 className="z-40 font-semibold text-xl sm:text-4xl mb-1">
+          <h2 className='z-40 font-semibold text-xl sm:text-4xl mb-1'>
             Your NearOracle score
           </h2>
-          <p className="text-lg">
+          <p className='text-lg'>
             Calculated with {renderProvider(scoreResponse)}
           </p>
+          <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
+            Loan amount requested:{' '}
+            <h2 className='text-4xl font-semibold text-white ml-2 mb-0'>
+              {'US$' +
+                Number(storageHelper.get('loanRequest'))?.toLocaleString()}
+            </h2>{' '}
+          </div>
 
           {scoreResponse?.score && (
-            <div className="flex w-full justify-center z-0">
+            <div className='flex w-full justify-center z-0'>
               <ScoreSpeedometer
                 score={scoreResponse?.score}
                 quality={scoreResponse?.feedback?.score.quality}
@@ -137,62 +144,62 @@ const ApplicantScorePage = () => {
           <Button
             onClick={() => setShowScoreDescription(true)}
             style={BUTTON_STYLES.LINK}
-            text="Explain my score"
+            text='Explain my score'
             classes={{
-              button: "text-xs text-white mb-3 hover:text-blue",
+              button: 'text-xs text-white mb-3 hover:text-blue',
             }}
           />
 
           {statusSuccess ? (
             <>
-              <p className="text-lg mt-3 font-semibold">
-                {" "}
+              <p className='text-lg mt-3 font-semibold'>
+                {' '}
                 Your score has already been saved to the blockchain.
               </p>
               <a
                 href={`${config.explorerUrl}/transactions/${chainActivity.txHashes}`}
-                target="_blank"
+                target='_blank'
               >
                 <Button
-                  text=" View on NEAR Explorer"
+                  text=' View on NEAR Explorer'
                   style={BUTTON_STYLES.OUTLINE}
                 />
               </a>
-              <div className="mt-2">
+              <div className='mt-2'>
                 <Button
-                  text="Get score with other validators"
-                  onClick={() => router.push("/applicant")}
+                  text='Get score with other validators'
+                  onClick={() => router.push('/applicant')}
                 />
               </div>
             </>
           ) : (
             <Button
-              text="Save score to blockchain"
+              text='Save score to blockchain'
               onClick={() => handleSetScore(scoreResponse)}
             />
           )}
-          <NavigationButtons backHandler={() => router.push("/applicant")} />
+          <NavigationButtons backHandler={() => router.push('/applicant')} />
           <Modal
             visible={showScoreDescription}
             footer={null}
             onCancel={() => setShowScoreDescription(false)}
-            bodyStyle={{ background: "#18181B" }}
-            style={{ top: "20%" }}
+            bodyStyle={{ background: '#18181B' }}
+            style={{ top: '20%' }}
           >
             <div
               className={`sm:px-8 flex py-5 justify-center rounded-md z-50 duration-500 font-sans  ${
-                !showScore ? "opacity-0" : "opacity-100"
+                !showScore ? 'opacity-0' : 'opacity-100'
               }`}
             >
-              <div className="p-8 rounded-lg z-50 max-w-xl w-full">
-                <h3 className="text-lg uppercase font-semibold mb-4">
+              <div className='p-8 rounded-lg z-50 max-w-xl w-full'>
+                <h3 className='text-lg uppercase font-semibold mb-4'>
                   Summary
                 </h3>
-                <p className="sm:text-base leading-7 mb-3 text-white">
+                <p className='sm:text-base leading-7 mb-3 text-white'>
                   {scoreResponse?.message || scoreResponse?.message}
                 </p>
-                <Link href="/learn">
-                  <p className="underline cursor-pointer hover:text-gray-500">
+                <Link href='/learn'>
+                  <p className='underline cursor-pointer hover:text-gray-500'>
                     Learn more
                   </p>
                 </Link>

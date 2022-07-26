@@ -56,14 +56,18 @@ const MainContainer = ({
     } else if (mediumSelected) {
       setLoanRequest(25000);
       setChecked(false);
-    } else {
+    } else if (highSelected) {
       setLoanRequest(50000);
       setChecked(false);
     }
   }, [lowSelected, mediumSelected, highSelected]);
 
   useEffect(() => {
-    storageHelper.persist('loanRequest', loanRequest);
+    if (loanRequest) {
+      storageHelper.persist('loanRequest', loanRequest);
+    } else {
+      storageHelper.get('loanRequest');
+    }
   }, [loanRequest]);
 
   useEffect(() => {

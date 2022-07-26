@@ -58,7 +58,9 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
 
   useManageQuery({ router, setStartCoinbase, setToWaiting });
 
-  const connectionError = (client: 'coinbase' | 'plaid' | string) =>
+  const connectionError = (
+    client: 'coinbase' | 'plaid' | 'covalent' | string
+  ) =>
     notification.error({
       message: `There was an error. Please re-connect to ${client}.`,
     });
@@ -139,6 +141,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
         <Covalent
           setToWaiting={setToWaiting}
           setNotWaiting={setNotWaiting}
+          connectionError={connectionError}
           router={router}
         />
       )}
