@@ -1,22 +1,22 @@
-import { useContext, useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { notification } from "antd";
-import Modal from "antd/lib/modal/Modal";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { notification } from 'antd';
+import Modal from 'antd/lib/modal/Modal';
 
-import ScoreSpeedometer from "@nearoracle/src/components/score";
-import { useNearContext } from "@nearoracle/src/context";
-import Button, { BUTTON_STYLES } from "@nearoracle/src/components/Button";
-import { storageHelper } from "@nearoracle/src/context";
-import ScoreSaved from "@nearoracle/src/components/score/scoreSaved";
+import ScoreSpeedometer from '@nearoracle/src/components/score';
+import { useNearContext } from '@nearoracle/src/context';
+import Button, { BUTTON_STYLES } from '@nearoracle/src/components/Button';
+import { storageHelper } from '@nearoracle/src/context';
+import ScoreSaved from '@nearoracle/src/components/score/scoreSaved';
 import {
   IScoreResponseCoinbase,
   IScoreResponsePlaid,
-} from "@nearoracle/src/types/types";
-import { useSetStatus } from "@nearoracle/src/components/score/hooks";
-import { LoadingContainer } from "@nearoracle/src/components/LoadingContainer";
-import NavigationButtons from "@nearoracle/src/components/NavigationButtons";
-import getConfig from "@nearoracle/src/utils/config";
+} from '@nearoracle/src/types/types';
+import { useSetStatus } from '@nearoracle/src/components/score/hooks';
+import { LoadingContainer } from '@nearoracle/src/components/LoadingContainer';
+import NavigationButtons from '@nearoracle/src/components/NavigationButtons';
+import getConfig from '@nearoracle/src/utils/config';
 
 const ApplicantScorePage = () => {
   const {
@@ -32,6 +32,7 @@ const ApplicantScorePage = () => {
 
   const [showScore, setShowScore] = useState<boolean>(false);
   const [showScoreDescription, setShowScoreDescription] = useState(false);
+  const [loanRequest, setLoanRequest] = useState<number | string>('');
   const router = useRouter();
 
   const queryTransactionHash = router?.query?.transactionHashes;
@@ -85,32 +86,35 @@ const ApplicantScorePage = () => {
   // When the user close the NEAR Wallet SDK, throw an error
   useEffect(() => {
     if (queryErrorCode) {
-      queryErrorCode?.includes("userRejected") &&
+      queryErrorCode?.includes('userRejected') &&
         notification.error({
-          message: "Near wallet window was closed. Please try again",
+          message: 'Near wallet window was closed. Please try again',
         });
-      router.replace("/applicant/score");
+      router.replace('/applicant/score');
     }
   }, [queryErrorCode, router]);
 
   useEffect(() => {
     if (!scoreResponse && !loading) {
-      router.push("/applicant/generate");
+      router.push('/applicant/generate');
     }
   }, [loading, scoreResponse, router]);
 
   useEffect(() => {
-    const scoreAnimated = storageHelper.get("scoreAnimationViewed");
+    const scoreAnimated = storageHelper.get('scoreAnimationViewed');
 
     setTimeout(
       () => {
         setShowScore(true);
-        storageHelper.persist("scoreAnimationViewed", true);
+        storageHelper.persist('scoreAnimationViewed', true);
       },
       scoreAnimated ? 0 : 3800
     );
   }, []);
 
+  useEffect(() => {
+    setLoanRequest(storageHelper.get('loanRequest'));
+  });
   const mainScoreContainer = (
     <div className='px-14 py-10 w-full flex flex-col items-center text-center'>
       {queryTransactionHash ? (
@@ -126,8 +130,7 @@ const ApplicantScorePage = () => {
           <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
             Loan amount requested:{' '}
             <h2 className='text-4xl font-semibold text-white ml-2 mb-0'>
-              {'US$' +
-                Number(storageHelper.get('loanRequest'))?.toLocaleString()}
+              {'US$' + Number(loanRequest)?.toLocaleString()}
             </h2>{' '}
           </div>
 
@@ -214,7 +217,7 @@ const ApplicantScorePage = () => {
   return (
     <>
       {statusLoading ? (
-        <LoadingContainer text="Submitting score to the blockchain." />
+        <LoadingContainer text='Submitting score to the blockchain.' />
       ) : (
         mainScoreContainer
       )}
