@@ -33,7 +33,7 @@ const config = {
   user: {
     client_user_id: "unique_per_user",
   },
-  products: ["auth","transactions"],
+  products: ["auth", "transactions", "assets", "identity", "investments", "liabilities"],
   language: "en",
 };
 
@@ -50,6 +50,7 @@ async function get_plaid_score(
       },
       body: JSON.stringify(body),
     });
+    console.log(backend_response);
     const responseJson = await backend_response.json();
     return responseJson;
 
@@ -108,8 +109,10 @@ export default async function handler(
       },
       body: JSON.stringify(config),
     });
-    const data = await createTokenRes.json();
 
+    
+    const data = await createTokenRes.json();
+   
     res.send({
       ...data,
     });
