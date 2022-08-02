@@ -50,7 +50,6 @@ async function get_plaid_score(
       },
       body: JSON.stringify(body),
     });
-    console.log(backend_response);
     const responseJson = await backend_response.json();
     return responseJson;
 
