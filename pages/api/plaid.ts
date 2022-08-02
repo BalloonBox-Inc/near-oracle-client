@@ -33,7 +33,7 @@ const config = {
   user: {
     client_user_id: "unique_per_user",
   },
-  products: ["auth","transactions"],
+  products: ["auth", "transactions", "assets", "identity", "investments", "liabilities"],
   language: "en",
 };
 
@@ -108,8 +108,10 @@ export default async function handler(
       },
       body: JSON.stringify(config),
     });
-    const data = await createTokenRes.json();
 
+    
+    const data = await createTokenRes.json();
+   
     res.send({
       ...data,
     });
