@@ -8,7 +8,7 @@ import ScoreSpeedometer from '@nearoracle/src/components/score';
 import { useNearContext } from '@nearoracle/src/context';
 import Button, { BUTTON_STYLES } from '@nearoracle/src/components/Button';
 import { storageHelper } from '@nearoracle/src/context';
-import ScoreSaved from '@nearoracle/src/components/score/scoreSaved';
+import SuccessPage from '@nearoracle/src/components/score/SuccessPage';
 import {
   IScoreResponseCoinbase,
   IScoreResponsePlaid,
@@ -118,7 +118,11 @@ const ApplicantScorePage = () => {
   const mainScoreContainer = (
     <div className='px-14 py-10 w-full flex flex-col items-center text-center'>
       {queryTransactionHash ? (
-        <ScoreSaved transactionHashes={queryTransactionHash} config={config} />
+        <SuccessPage
+          transactionHashes={queryTransactionHash}
+          config={config}
+          score={true}
+        />
       ) : (
         <>
           <h2 className='z-40 font-semibold text-xl sm:text-4xl mb-1'>
@@ -157,7 +161,7 @@ const ApplicantScorePage = () => {
             <>
               <p className='text-lg mt-3 font-semibold'>
                 {' '}
-                Your score has already been saved to the blockchain.
+                Your score has already been saved to the blockchain.{' '}
               </p>
               <a
                 href={`${config.explorerUrl}/transactions/${chainActivity.txHashes}`}
@@ -168,12 +172,14 @@ const ApplicantScorePage = () => {
                   style={BUTTON_STYLES.OUTLINE}
                 />
               </a>
-              <div className='mt-2'>
-                <Button
-                  text='Get score with other validators'
-                  onClick={() => router.push('/applicant')}
-                />
-              </div>
+              {!chainActivity?.nftMinted && (
+                <div className='mt-2'>
+                  <Button
+                    text='Mint your score as an NFT'
+                    onClick={() => router.replace('/applicant/nft')}
+                  />
+                </div>
+              )}
             </>
           ) : (
             <Button

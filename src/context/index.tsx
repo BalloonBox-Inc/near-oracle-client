@@ -32,6 +32,7 @@ export type Smart_Contract = {
   contractId: string;
   query_score_history: (account_id: AccountIdParam) => void;
   store_score: ({ callbackUrl, args }: any) => void;
+  nft_mint: ({ callbackUrl, args }: any) => void;
 };
 
 export type AccountIdParam = {
@@ -49,6 +50,7 @@ export interface INearContext {
   plaidPublicToken: Plaid_Token;
   setPlaidPublicToken: Set_Plaid_Token;
   contract: Smart_Contract;
+  nftContract: Smart_Contract;
   chainActivity: IChainActivity;
   setChainActivity: Set_Chain_Activity;
   handleSetChainActivity: Handle_Set_Chain_Activity;
@@ -60,11 +62,12 @@ export interface PlaidToken {
 }
 
 export enum CHAIN_ACTIVITIES {
-  scoreSubmitted = "scoreSubmitted",
-  dataProvider = "dataProvider",
-  scoreAmount = "scoreAmount",
-  scoreMessage = "scoreMessage",
-  txHashes = "txHashes",
+  scoreSubmitted = 'scoreSubmitted',
+  dataProvider = 'dataProvider',
+  scoreAmount = 'scoreAmount',
+  scoreMessage = 'scoreMessage',
+  txHashes = 'txHashes',
+  nftMinted = 'nftMinted',
 }
 export interface IChainActivity {
   [CHAIN_ACTIVITIES.scoreSubmitted]?: boolean;
@@ -72,6 +75,7 @@ export interface IChainActivity {
   [CHAIN_ACTIVITIES.scoreAmount]?: number;
   [CHAIN_ACTIVITIES.scoreMessage]?: string;
   [CHAIN_ACTIVITIES.txHashes]?: any;
+  [CHAIN_ACTIVITIES.nftMinted]?: boolean;
 }
 
 export const CHAIN_ACTIVITIES_INIT = {
@@ -80,6 +84,7 @@ export const CHAIN_ACTIVITIES_INIT = {
   scoreAmount: undefined,
   scoreMessage: undefined,
   txHashes: undefined,
+  nftMinted: undefined,
 };
 
 export const storageHelper = {
@@ -99,7 +104,7 @@ export const Context = createContext<INearContext | undefined>(undefined);
 const useNearContext = () => {
   const context = useContext(Context);
   if (!context) {
-    throw new Error("useNearContext must be used within a Context Provider");
+    throw new Error('useNearContext must be used within a Context Provider');
   }
   return context;
 };
@@ -113,49 +118,55 @@ const initialState = {
   coinbaseToken: null,
   plaidPublicToken: null,
   contract: null,
+  nftContract: null,
 };
 
 function contextReducer(state: any, action: any) {
   switch (action.type) {
-    case "SET_WALLET":
+    case 'SET_WALLET':
       return {
         ...state,
         wallet: action.payload,
       };
-    case "SET_ISCONNECTED":
+    case 'SET_ISCONNECTED':
       return {
         ...state,
         isConnected: action.payload,
       };
-    case "SET_LOADING":
+    case 'SET_LOADING':
       return {
         ...state,
         loading: action.payload,
       };
-    case "SET_SCORE_RESPONSE":
+    case 'SET_SCORE_RESPONSE':
       return {
         ...state,
         scoreResponse: action.payload,
       };
-    case "SET_CHAIN_ACTIVITY":
+    case 'SET_CHAIN_ACTIVITY':
       return {
         ...state,
         chainActivity: action.payload,
       };
-    case "SET_COINBASE_TOKEN":
+    case 'SET_COINBASE_TOKEN':
       return {
         ...state,
         coinbaseToken: action.payload,
       };
-    case "SET_PLAID_PUBLIC_TOKEN":
+    case 'SET_PLAID_PUBLIC_TOKEN':
       return {
         ...state,
         plaidPublicToken: action.payload,
       };
-    case "SET_CONTRACT":
+    case 'SET_CONTRACT':
       return {
         ...state,
         contract: action.payload,
+      };
+    case 'SET_NFT_CONTRACT':
+      return {
+        ...state,
+        nftContract: action.payload,
       };
     default:
       return state;
@@ -163,28 +174,30 @@ function contextReducer(state: any, action: any) {
 }
 
 const ContextProvider = ({ children }: any) => {
-  const config = getConfig("testnet");
+  const config = getConfig('testnet');
   const [state, dispatch] = useReducer(contextReducer, initialState);
 
   const handlers = useMemo(() => {
     return {
       setWallet: (wallet: WalletConnection) =>
-        dispatch({ type: "SET_WALLET", payload: wallet }),
+        dispatch({ type: 'SET_WALLET', payload: wallet }),
       setIsConnected: (isConnected: boolean) =>
-        dispatch({ type: "SET_ISCONNECTED", payload: isConnected }),
+        dispatch({ type: 'SET_ISCONNECTED', payload: isConnected }),
       setLoading: (loading: boolean) =>
-        dispatch({ type: "SET_LOADING", payload: loading }),
+        dispatch({ type: 'SET_LOADING', payload: loading }),
       setScoreResponse: (
         scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
-      ) => dispatch({ type: "SET_SCORE_RESPONSE", payload: scoreResponse }),
+      ) => dispatch({ type: 'SET_SCORE_RESPONSE', payload: scoreResponse }),
       setChainActivity: (chainActivity: IChainActivity) =>
-        dispatch({ type: "SET_CHAIN_ACTIVITY", payload: chainActivity }),
+        dispatch({ type: 'SET_CHAIN_ACTIVITY', payload: chainActivity }),
       setCoinbaseToken: (coinbaseToken: ICoinbaseTokenCreateResponse | null) =>
-        dispatch({ type: "SET_COINBASE_TOKEN", payload: coinbaseToken }),
+        dispatch({ type: 'SET_COINBASE_TOKEN', payload: coinbaseToken }),
       setPlaidPublicToken: (plaidPublicToken: Plaid_Token) =>
-        dispatch({ type: "SET_PLAID_PUBLIC_TOKEN", payload: plaidPublicToken }),
+        dispatch({ type: 'SET_PLAID_PUBLIC_TOKEN', payload: plaidPublicToken }),
       setContract: (contract: Contract | null) =>
-        dispatch({ type: "SET_CONTRACT", payload: contract }),
+        dispatch({ type: 'SET_CONTRACT', payload: contract }),
+      setNftContract: (contract: Contract | null) =>
+        dispatch({ type: 'SET_NFT_CONTRACT', payload: contract }),
     };
   }, []);
 
@@ -196,6 +209,7 @@ const ContextProvider = ({ children }: any) => {
     setCoinbaseToken,
     setPlaidPublicToken,
     setContract,
+    setNftContract,
     setChainActivity,
   } = handlers;
 
@@ -207,6 +221,7 @@ const ContextProvider = ({ children }: any) => {
     coinbaseToken,
     plaidPublicToken,
     contract,
+    nftContract,
     chainActivity,
   } = state;
 
@@ -217,19 +232,29 @@ const ContextProvider = ({ children }: any) => {
       // Initialize connection to the NEAR testnet
       const near = await connect(config);
       // Initializing wallet based account.
-      const nearWallet = new WalletConnection(near, "near-oracle");
+      const nearWallet = new WalletConnection(near, 'near-oracle');
       setWallet(nearWallet);
 
       // Initializing the contract APIs by contract name and configuration
-      const nearContract = new Contract(
+      const scoreContract = new Contract(
         nearWallet.account(), // NEAR account to sign change method transactions
         CONTRACT_NAME, // the account where the contract has been deployed
         {
-          viewMethods: ["query_score_history"],
-          changeMethods: ["store_score"],
+          viewMethods: ['query_score_history'],
+          changeMethods: ['store_score'],
         }
       );
-      setContract(nearContract);
+      setContract(scoreContract);
+
+      const nftContract = new Contract(
+        nearWallet.account(),
+        'nft.bbox.testnet',
+        {
+          viewMethods: ['whose_token'],
+          changeMethods: ['nft_mint'],
+        }
+      );
+      setNftContract(nftContract);
     };
 
     initContract();
@@ -241,11 +266,11 @@ const ContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     const returnHome = () => {
-      if (typeof window !== "undefined") {
-        (router.pathname.includes("start") ||
-          router.pathname.includes("applicant") ||
-          router.pathname.includes("provider")) &&
-          router.push("/");
+      if (typeof window !== 'undefined') {
+        (router.pathname.includes('start') ||
+          router.pathname.includes('applicant') ||
+          router.pathname.includes('provider')) &&
+          router.push('/');
       }
     };
     if (!loading) {
@@ -255,19 +280,19 @@ const ContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (!loading) {
-      storageHelper.persist("coinbaseToken", coinbaseToken);
-      storageHelper.persist("plaidPublicToken", plaidPublicToken);
-      storageHelper.persist("scoreResponse", scoreResponse);
-      storageHelper.persist("chainActivity", chainActivity);
+      storageHelper.persist('coinbaseToken', coinbaseToken);
+      storageHelper.persist('plaidPublicToken', plaidPublicToken);
+      storageHelper.persist('scoreResponse', scoreResponse);
+      storageHelper.persist('chainActivity', chainActivity);
     }
   }, [coinbaseToken, plaidPublicToken, scoreResponse, chainActivity, loading]);
 
   useEffect(() => {
-    setIsConnected(storageHelper.get("near-oracle_wallet_auth_key") && true);
-    setCoinbaseToken(storageHelper.get("coinbaseToken"));
-    setPlaidPublicToken(storageHelper.get("plaidPublicToken"));
-    setScoreResponse(storageHelper.get("scoreResponse"));
-    setChainActivity(storageHelper.get("chainActivity"));
+    setIsConnected(storageHelper.get('near-oracle_wallet_auth_key') && true);
+    setCoinbaseToken(storageHelper.get('coinbaseToken'));
+    setPlaidPublicToken(storageHelper.get('plaidPublicToken'));
+    setScoreResponse(storageHelper.get('scoreResponse'));
+    setChainActivity(storageHelper.get('chainActivity'));
     setLoading(false);
   }, []);
 
@@ -275,8 +300,8 @@ const ContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (accountIdQuery) {
-      notification.success({ message: "Successfully connected wallet!" });
-      router.replace("/");
+      notification.success({ message: 'Successfully connected wallet!' });
+      router.replace('/');
     }
   }, [router]);
 
@@ -294,17 +319,17 @@ const ContextProvider = ({ children }: any) => {
     setChainActivity(CHAIN_ACTIVITIES_INIT);
     localStorage.clear();
     notification.success({
-      message: "Successfully disconnected wallet",
+      message: 'Successfully disconnected wallet',
     });
   };
 
   const handleSetChainActivity = (val: IChainActivity | null) => {
     if (val) {
       setChainActivity({ ...chainActivity, ...val });
-      storageHelper.persist("chainActivity", val);
+      storageHelper.persist('chainActivity', val);
     } else {
       setChainActivity(CHAIN_ACTIVITIES_INIT);
-      storageHelper.persist("chainActivity", CHAIN_ACTIVITIES_INIT);
+      storageHelper.persist('chainActivity', CHAIN_ACTIVITIES_INIT);
     }
   };
 
@@ -324,6 +349,7 @@ const ContextProvider = ({ children }: any) => {
         plaidPublicToken,
         setPlaidPublicToken,
         contract,
+        nftContract,
         setChainActivity,
         chainActivity,
         handleSetChainActivity,
