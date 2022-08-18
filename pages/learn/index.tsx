@@ -109,7 +109,7 @@ const LearnMorePage = () => {
         color4='#FF698E'
       />
       <ProviderSection
-        title='Ethereum Wallet'
+        title='MetaMask'
         logo='/images/covalentLogo.svg'
         description='The data fetched from your MetaMask wallet are grouped into 4 categories: '
         piechart='/images/eth-pie.svg'

@@ -211,8 +211,8 @@ const MainContainer = ({
                     color: '#554BF9',
                   }}
                 />
-                To proceed with the Ethereum wallet, you need to install
-                Metamask browser extension.{' '}
+                To proceed with MetaMask, you need to install Metamask browser
+                extension.{' '}
                 <a
                   href='https://metamask.io/download/'
                   target={'_blank'}

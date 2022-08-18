@@ -82,7 +82,7 @@ export default function HowItWorksSection() {
           <StepBox
             title='Algorithm calculates financial score'
             img='./images/provider-1.svg'
-            description='Applicants will get a score that is calculated by an algorithm based on their financial data retrieved by three validators: Plaid, Ethereum wallet, Coinbase.'
+            description='Applicants will get a score that is calculated by an algorithm based on their financial data retrieved by three validators: Plaid, MetaMask wallet, Coinbase.'
             style={{ marginBottom: '3rem' }}
             side='right'
           />
