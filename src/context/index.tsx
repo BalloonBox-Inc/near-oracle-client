@@ -267,6 +267,10 @@ const ContextProvider = ({ children }: any) => {
       const near = await connect(config);
       const networkId = 'testnet';
 
+      // Initializing wallet based account.
+      const nearWallet = new WalletConnection(near, 'near-oracle');
+      setWallet(nearWallet);
+
       const keyStore = new keyStores.InMemoryKeyStore();
       const keyPair = KeyPair.fromString(contract_owner);
 
@@ -284,10 +288,6 @@ const ContextProvider = ({ children }: any) => {
 
       const near2 = await connect(signerConfig);
       const signerAccount = await near2.account('bbox.testnet');
-
-      // Initializing wallet based account.
-      const nearWallet = new WalletConnection(near, 'near-oracle');
-      setWallet(nearWallet);
 
       // Initializing the four different contract APIs by contract name and configuration
       const scoreWhitelistContract = new Contract(

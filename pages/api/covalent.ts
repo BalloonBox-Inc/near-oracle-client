@@ -22,7 +22,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 body: JSON.stringify(body),
             })
 
-            console.log(backend_response)
 
             const covalentScore = await backend_response.json();
             res.send({covalentScore})
