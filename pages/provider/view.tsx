@@ -33,7 +33,12 @@ const ViewScore = () => {
     const initialTransform = pipe(
       replace(/Your/g, "This user's"),
       replace(/your/g, 'their'),
-      replace(/you/g, 'them')
+      replace(/you/g, 'them'),
+      replace('Congrats, them have successfully obtained a credit score!', ' '),
+      replace(
+        'Please top up their wallet or use a different wallet address.',
+        ' '
+      )
     )(description);
     const tryAgainIndex = initialTransform.indexOf('Try again');
     if (tryAgainIndex < 0) {
@@ -74,6 +79,20 @@ const ViewScore = () => {
     return convertedTime;
   };
 
+  const renderLoanAmount = (score: number) => {
+    const loanAmountBin = [0, 500, 1000, 5000, 10000, 15000, 20000, 25000];
+    const scoreBin = [300, 500, 560, 650, 740, 800, 870, 900];
+    let loanAmount;
+    for (let i = 0; i < scoreBin.length; i++) {
+      if (score > scoreBin[i] && score < scoreBin[i + 1]) {
+        loanAmount = loanAmountBin[i + 1];
+      } else if (score === scoreBin[i]) {
+        loanAmount = loanAmountBin[i];
+      }
+    }
+    return loanAmount;
+  };
+
   const convertedTime = covertTimeToDate(accountInfo?.timestamp!) + ' UTC';
 
   return (
@@ -83,6 +102,19 @@ const ViewScore = () => {
           <h2 className='z-30 font-semibold text-xl sm:text-3xl p-0'>
             {accountId}'s Credit Score
           </h2>
+          <div className='flex justify-center'>
+            <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
+              Your applicant qualifies for:{' '}
+              <h2 className='text-2xl sm:text-4xl font-semibold text-white ml-2 mb-0'>
+                {'$' +
+                  Number(
+                    renderLoanAmount(accountInfo?.score)
+                  )?.toLocaleString() +
+                  ' USD'}
+              </h2>{' '}
+            </div>
+          </div>
+
           <ScoreSpeedometer
             score={accountInfo?.score}
             date={convertedTime}
@@ -106,8 +138,8 @@ const ViewScore = () => {
       )}
       {!loading && !accountInfo && (
         <>
-          <div className='text-center z-30 px-0 sm:p-10'>
-            <h2 className='z-30 font-semibold text-xl sm:text-3xl p-0'>
+          <div className='text-center z-10 px-0 sm:p-10'>
+            <h2 className='font-semibold text-xl sm:text-3xl p-0'>
               View an Applicant's Score
             </h2>
             <div className='w-full px-10 md:px-40'>

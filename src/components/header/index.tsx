@@ -8,9 +8,10 @@ import { useNearContext } from "@nearoracle/src/context";
 export default function Header() {
   const [showAccount, setShowAccount] = useState<boolean>(false);
   const { isConnected } = useNearContext();
+  const ENV_CONFIG = process.env.ENV_CONFIG;
   return (
     <div className='z-10'>
-      <TestBanner />
+      {ENV_CONFIG === 'testnet' && <TestBanner />}
       <header
         className='flex items-center justify-between w-full py-4 px-10'
         style={{ height: '80px' }}

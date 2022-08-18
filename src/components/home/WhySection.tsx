@@ -6,8 +6,9 @@ export default function WhySection() {
       <h2 className='text-4xl font-raleway font-bold mb-20'>
         Why{' '}
         <span className='text-transparent near-bg-gradient background-clip'>
-          NearOracle?
+          NearOracle
         </span>
+        ?
       </h2>
 
       <div className='flex flex-col lg:flex-row md:mt-0'>
@@ -25,7 +26,7 @@ export default function WhySection() {
         <CardWithIcons
           title='Open Source'
           img='./images/opensource.svg'
-          description='We beleive in full transparency and giving back to the community, which is why NEAROracle is entirely open source.'
+          description='We believe in full transparency and giving back to the community, which is why NearOracle is entirely open source.'
         />
       </div>
     </div>

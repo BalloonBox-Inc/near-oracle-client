@@ -27,5 +27,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
             res.send({covalentScore})
         } catch(error){
             res.send({error})
+            console.log({error})
         }
 }
