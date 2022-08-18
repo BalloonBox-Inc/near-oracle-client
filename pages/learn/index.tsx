@@ -11,18 +11,18 @@ const LearnMorePage = () => {
         </span>{' '}
         Works{' '}
       </h1>
-      <p className='text-xs md:text-sm text-lightgray mt-5'>
+      <p className='text-md md:text-sm text-lightgray mt-5'>
         NearOracle allows you to log into one of three possible validators: your
-        Coinbase account, your MetaMask non-custodial ETH wallet, or the
-        financial institution you do your banking with. The oracle retrieves
-        data on your financial history, and through an algorithm, it calculates
-        and returns you a credit score. The dApp further allows you to store
-        your credit score to the Near blockchain as well as to mint your credit
-        score as an NFT. You are required to pay a small gas fee to cover both
-        calculation cost and blockchain storage cost. While your data remains
-        private, your score will be permanently added to the blockchain and you
-        can view it for free at any time in the future. Similarly, you can
-        visualize your NFTs among the collectibles of your Near wallet.
+        Coinbase account, your MetaMask wallet, or the financial institution
+        with whom you bank. The oracle retrieves data on your financial history,
+        and algorithmically calculates and returns your credit score. The dApp
+        further allows you to store your credit score on the NEAR blockchain as
+        well as mint your credit score as an NFT. You will incur a small gas fee
+        to cover both the calculation and blockchain storage costs. While your
+        data remains private, your score will be permanently added to the
+        blockchain and you can view it for free at any time in the future.
+        Similarly, you can visualize your NFTs among the collectibles in your
+        NEAR wallet.
       </p>
       <div className='bg-zinc-900 px-10 py-14 rounded-2xl mt-10 flex justify-between items-center md:flex-row flex-col'>
         <div className='w-48'>
@@ -59,7 +59,7 @@ const LearnMorePage = () => {
             className='w-42 md:rotate-0 md:p-0 py-5'
           />
           <p className='text-lightgray mt-5 text-center'>
-            Encrypt and store your score to Near blockchain (costs a gas fee)
+            Store your score to Near blockchain (costs a gas fee).
           </p>
         </div>
         <img
@@ -70,7 +70,7 @@ const LearnMorePage = () => {
         <div className='w-48 flex flex-col items-center'>
           <img src='./images/nft.png' alt='key' className='mb-5' />
           <p className='text-lightgray mt-5 text-center'>
-            Add value to your score, minting it as an NFT
+            Add value to your score, minting it as an NFT.
           </p>
         </div>
       </div>
@@ -82,13 +82,13 @@ const LearnMorePage = () => {
       <h1 className='font-bold font-raleway text-2xl md:text-4xl leading-tight'>
         How we calculate your score
       </h1>
-      <p className='text-xs md:text-sm text-lightgray my-5'>
+      <p className='text-md md:text-sm text-lightgray my-5'>
         NearOracle scores are calculated using many pieces of data retrieved
         from either your bank account or your crypto wallets. We developed three
         distinct models, depending on your choice of providers: Bank accounts,
-        Ethereum wallet, Coinbase. The percentages in the donut chart reflect
-        how important each of the categories is in determining your cumulative
-        score.
+        MetaMask wallet or your Coinbase account. The percentages in the donut
+        chart reflect how important each of the categories is in determining
+        your cumulative score.
       </p>
       <ProviderSection
         title='Bank'
@@ -96,14 +96,14 @@ const LearnMorePage = () => {
         description='Your banking data are grouped into 4 categories: '
         piechart='/images/bank-pie.svg'
         cats='Credit, Velocity, Stability, Diversity.'
-        cat1='Stability (1o%)'
-        des1='computes your total account balance now as well as the minimum running balance for the past few years.'
-        cat2='Diversity (1o%)'
-        des2='rewards the diversity of a portfolio, checking for all account types: savings, retail investment, brokerage, loans, and retirement accounts. It also rewards based on the volume of capital held in each account.'
-        cat3='Credit (4o%)'
-        des3='detects the number, duration, type of credit accounts, and the age of the oldest account. It also considers the percentage of available credit used, the cumulative credit limit, and how often interest was charged on your credit cards.'
-        cat4='Velocity (4o%)'
-        des4='analyzes how many and how fast transactions occur in checking account(s). It calculates the number and volume of monthly recurring deposits and withdrawals, the cumulative monthly income, and expenses.'
+        cat4='Stability (28%)'
+        des4='Computes your total account balance now as well as the minimum running balance for the past few years.'
+        cat1='Diversity (1o%)'
+        des1='Rewards the diversity of a portfolio, checking for all account types: savings, retail investment, brokerage, loans, and retirement accounts. It also rewards based on the volume of capital held in each account.'
+        cat3='Credit (42%)'
+        des3='Detects the number, duration, type of credit accounts, and the age of the oldest account. It also considers the percentage of available credit used, the cumulative credit limit, and how often interest was charged on your credit cards.'
+        cat2='Velocity (2o%)'
+        des2='Analyzes how many and how fast transactions occur in checking account(s). It calculates the number and volume of monthly recurring deposits and withdrawals, the cumulative monthly income, and expenses.'
         color2='#FFB1C4'
         color3='#FF144E'
         color4='#FF698E'
@@ -116,15 +116,15 @@ const LearnMorePage = () => {
         cats='Traffic, Wealth, Stamina, Credibility.
         '
         cat1='Credibility (10%)'
-        des1='considers how long your ETH wallet has been active.'
+        des1='Considers how long your ETH wallet has been active.'
         cat2='Stamina (20%)'
-        des2=' investigates how diversified your wallet is and what types of transactions you perform regularly (staking, voting, transferring, swapping, minting, selling, buying, etc.)
+        des2='Investigates how diversified your wallet is and what types of transactions you perform regularly (staking, voting, transferring, swapping, minting, selling, buying, etc.)
         '
         cat3='Traffic (37%)'
-        des3='estimates the count, volume, and frequency of your crypto transactions.
+        des3='Estimates the count, volume, and frequency of your crypto transactions.
         '
         cat4='Wealth (33%)'
-        des4='calculates the net worth of your wallet across all crypto assets you own.
+        des4='Calculates the net worth of your wallet across all crypto assets you own.
         '
         color2='#D2D5DA'
         color3='#394150'
@@ -137,14 +137,14 @@ const LearnMorePage = () => {
         piechart='/images/coinbase-pie.svg'
         cats='KYC, History, Liquidity, Activity.'
         cat1='KYC (10%)'
-        des1={`checks whether you correctly kyc'ed into Coinbase and whether you own any active account
+        des1={`Checks whether you correctly kyc'ed into Coinbase and whether you own any active account
         `}
         cat2='History (10%)'
-        des2='looks at the length of transaction history and the age of your longest-standing wallet.'
+        des2='Looks at the length of transaction history and the age of your longest-standing wallet.'
         cat3='Liquidity (40%)'
-        des3='computes your current cumulative net account balance as well as the minimum running balance for the past few years.'
+        des3='Computes your current cumulative net account balance as well as the minimum running balance for the past few years.'
         cat4='Activity (40%)'
-        des4='checks how lively is the transaction history, the volume traded, staked, bought, sold, withdrawn in the last year, and the net profit since account inception.'
+        des4='Checks how lively is the transaction history, the volume traded, staked, bought, sold, withdrawn in the last year, and the net profit since account inception.'
         color2='#C3D4FF'
         color3='#1652F0'
         color4='#7295F0'

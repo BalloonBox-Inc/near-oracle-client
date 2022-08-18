@@ -131,7 +131,7 @@ const MainContainer = ({
         Select the exact amount
       </h3>
       <h2 className='text-4xl font-semibold text-white'>
-        {'US$' + Number(loanRequest)?.toLocaleString()}
+        {'$' + Number(loanRequest)?.toLocaleString() + ' USD'}
       </h2>
       <div>
         <input
@@ -176,10 +176,10 @@ const MainContainer = ({
         />
 
         <ProviderSelector
-          provider='Ethereum Wallet'
-          thumbnail='eth-icon.svg'
+          provider='MetaMask'
+          thumbnail='metamask-icon.svg'
           poweredByLogo='covalentLogo.svg'
-          description='Get your ethereum transaction history from your ethereum wallet.'
+          description='Get your ethereum transaction history from your MetaMask wallet.'
           selected={covalentSelected}
           onClick={setToCovalent}
           disabled={mediumSelected || highSelected}

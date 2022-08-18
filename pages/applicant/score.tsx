@@ -139,22 +139,17 @@ const ApplicantScorePage = () => {
           <p className='text-lg'>
             Calculated with {renderProvider(scoreResponse)}
           </p>
-          {/* <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
-            Loan amount requested:{' '}
-            <h2 className='text-4xl font-semibold text-white ml-2 mb-0'>
-              {'US$' + Number(loanRequest)?.toLocaleString()}
-            </h2>{' '}
-          </div> */}
           <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
             Eligible loan amount:{' '}
             <h2 className='text-2xl sm:text-4xl font-semibold text-white ml-2 mb-0'>
-              {'US$' +
-                Number(scoreResponse?.risk?.loan_amount)?.toLocaleString()}
+              {'$' +
+                Number(scoreResponse?.risk?.loan_amount)?.toLocaleString() +
+                ' USD'}
             </h2>{' '}
             <div className='mt-1'>
               (Requested loan amount:{' '}
               <span className='font-medium'>
-                {'US$' + Number(loanRequest)?.toLocaleString()}
+                {'$' + Number(loanRequest)?.toLocaleString() + ' USD'}
               </span>
               )
             </div>

@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
 
-import getConfig, { CONTRACT_NAME } from '@nearoracle/src/utils/config';
+import getConfig from '@nearoracle/src/utils/config';
 import { ICoinbaseTokenCreateResponse } from '@nearoracle/pages/api/coinbase';
 import {
   IScoreResponsePlaid,
@@ -259,13 +259,13 @@ const ContextProvider = ({ children }: any) => {
   const router = useRouter();
 
   useEffect(() => {
-    const config = getConfig('testnet');
+    const config = getConfig(process.env.ENV_CONFIG);
     const contract_owner = process.env.CONTRACT_OWNER_PRIVATE_KEY as string;
 
     const initContract = async () => {
       // Initialize connection to the network (testnet/mainnet)
       const near = await connect(config);
-      const networkId = 'testnet';
+      const networkId = process.env.ENV_CONFIG as string;
 
       // Initializing wallet based account.
       const nearWallet = new WalletConnection(near, 'near-oracle');
