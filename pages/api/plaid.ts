@@ -50,10 +50,12 @@ async function get_plaid_score(
       },
       body: JSON.stringify(body),
     });
+
     const responseJson = await backend_response.json();
     return responseJson;
 
   } catch (error) {
+    
     return error;
   }
 }
@@ -91,7 +93,6 @@ export default async function handler(
           res.send({ plaid_score_res });
         }, 3000);
       } else res.send({ plaid_score_res });
-  
       return;
     } catch (error) {
       res.send({ error });

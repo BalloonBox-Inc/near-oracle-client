@@ -15,12 +15,14 @@ interface IMainContainerProps {
   handlePlaidConnect: () => void;
   setStartCoinbase: () => void;
   setStartCovalent: () => void;
+  queryStatus: string | string[] | undefined;
 }
 
 const MainContainer = ({
   setStartCoinbase,
   handlePlaidConnect,
   setStartCovalent,
+  queryStatus,
 }: IMainContainerProps) => {
   const router = useRouter();
 
@@ -75,28 +77,45 @@ const MainContainer = ({
     if (checked) {
       setLoanRequest(maxValue);
     }
-  }, [checked]);
+  }, [checked, loanRequest]);
 
   const loanRangeSection = (
     <div>
       <h3 className='text-lg sm:text-xl font-medium text-white mb-4 sm:mb-10 sm:mt-0 mt-20'>
-        How much are you looking to borrow?
+        How much would you like to borrow?
       </h3>
+      {queryStatus === 'not_qualified' && (
+        <Alert
+          style={{
+            marginBottom: '3rem',
+          }}
+          description={
+            <div className='p-0'>
+              Unfortunately, it looks like you do not qualify for the requested
+              loan amount. You may be better suited for a smaller loan size, try
+              lower loan application template.
+            </div>
+          }
+          type='warning'
+          showIcon
+        />
+      )}
+
       <div className='grid md:grid-cols-3 gap-3'>
         <TemplateSelector
-          priceRange='$0~$25K'
+          priceRange='$0-$25K'
           cryptoAvailable={true}
           onClick={setToLow}
           selected={lowSelected}
         />
         <TemplateSelector
-          priceRange='$25K~$50K'
+          priceRange='$25K-$50K'
           cryptoAvailable={false}
           onClick={setToMedium}
           selected={mediumSelected}
         />
         <TemplateSelector
-          priceRange='$50K~$100K'
+          priceRange='$50K-$100K'
           cryptoAvailable={false}
           onClick={setToHigh}
           selected={highSelected}
@@ -132,6 +151,7 @@ const MainContainer = ({
           value='noCustomAmount'
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
+          className='accent-indigo-500 mr-1'
         />
         <label> I don't have a specific amount in mind yet.</label>
       </div>

@@ -42,6 +42,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
   ] = useHandleExistingScore();
 
   const {
+    scoreResponse,
     plaidPublicToken,
     setPlaidPublicToken,
     setScoreResponse,
@@ -74,8 +75,7 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
   };
 
   const handlePlaidConnect = async () => {
-    if (plaidPublicToken) {
-      setStartPlaidLink();
+    if (plaidPublicToken && scoreResponse?.endpoint.includes('plaid')) {
       router.replace('/applicant/generate?type=plaid&status=success');
     } else {
       router.replace('/applicant/generate?type=plaid&status=loading');
@@ -86,6 +86,9 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
         if (plaidResJson?.link_token) {
           setStartPlaidLink();
           setPlaidPublicToken({ publicToken: plaidResJson.link_token });
+        }
+        if (plaidResJson?.status === 400) {
+          connectionError('plaid');
         }
       } catch (error) {
         connectionError('plaid');
@@ -111,13 +114,14 @@ export const GenerateScore = ({ chainActivity }: IGenerateScorePage) => {
         />
       )}
       {awaitingScoreResponse && (
-        <LoadingContainer text='Calculating your score. This may take a minute.' />
+        <LoadingContainer text='Retrieving your transaction data. This may take a minute.' />
       )}
       {!awaitingScoreResponse && (
         <MainContainer
           setStartCoinbase={setStartCoinbase}
           handlePlaidConnect={handlePlaidConnect}
           setStartCovalent={setStartCovalent}
+          queryStatus={queryStatus}
         />
       )}
       {startCoinbase && (

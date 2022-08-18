@@ -45,6 +45,7 @@ const Covalent = ({
             }),
           });
           const { covalentScore } = await covalentRes.json();
+
           if (covalentScore.status === 'success') {
             setScoreResponse(covalentScore);
             router.replace('/applicant/generate?type=covalent&status=success');

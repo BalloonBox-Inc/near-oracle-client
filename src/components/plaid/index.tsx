@@ -6,9 +6,9 @@ import {
   PlaidLinkError,
   PlaidLinkOnExitMetadata,
 } from "react-plaid-link";
-import { NextRouter } from "next/router";
-import { useNearContext } from "@nearoracle/src/context";
-import { exchangePlaidToken } from "@nearoracle/src/services";
+import Router, { NextRouter } from 'next/router';
+import { useNearContext } from '@nearoracle/src/context';
+import { exchangePlaidToken } from '@nearoracle/src/services';
 import { storageHelper } from '@nearoracle/src/context';
 interface Props {
   isOauth?: boolean;
@@ -52,6 +52,9 @@ const PlaidLink = (props: Props) => {
     if (plaid_score_res?.status === 'success') {
       props.router.replace('/applicant/generate?type=plaid&status=success');
       setScoreResponse(plaid_score_res);
+    } else if (plaid_score_res?.status === 'not qualified') {
+      notification.error({ message: plaid_score_res.message });
+      props.router.replace('/applicant/generate?status=not_qualified');
     } else {
       handleError(false);
     }

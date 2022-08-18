@@ -1,26 +1,43 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { notification } from 'antd';
+import { NFTStorage } from 'nft.storage';
 
 import Canvas from '@nearoracle/src/components/Canvas';
 import { useNearContext } from '@nearoracle/src/context';
 import Button from '@nearoracle/src/components/Button';
 import SuccessPage from '@nearoracle/src/components/score/SuccessPage';
 import getConfig from '@nearoracle/src/utils/config';
+import { useHandleAwaitingScoreResponse } from '@nearoracle/src/components/generate/hooks';
+import { LoadingContainer } from '@nearoracle/src/components/LoadingContainer';
 
 const ApplicantNftPage = () => {
-  const { chainActivity, wallet, nftContract, handleSetChainActivity } =
-    useNearContext();
+  const {
+    chainActivity,
+    wallet,
+    nftContract,
+    nftWhitelistContract,
+    handleSetChainActivity,
+  } = useNearContext();
+
+  const [awaitingScoreResponse, { setToWaiting, setNotWaiting }] =
+    useHandleAwaitingScoreResponse();
+
   const [textColor, setTextColor] = useState('#ffffff');
   const [bgColor1, setBgColor1] = useState('#ffffff');
   const [bgColor2, setBgColor2] = useState('#ffffff');
   const [planetSelected, setPlanetSelected] = useState('Earth.png');
-  const [dataURL, setDataURL] = useState('');
+  const [dataUrl, setDataUrl] = useState('');
+
   const router = useRouter();
 
   const queryTransactionHash = router?.query?.transactionHashes;
   const queryErrorCode = router?.query?.errorCode;
+  const queryStatus = router?.query?.status;
+
   const config = getConfig();
+
+  const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY as string;
 
   useEffect(() => {
     queryTransactionHash && handleSetChainActivity({ nftMinted: true });
@@ -72,7 +89,7 @@ const ApplicantNftPage = () => {
         );
         // Display a score
         context.fillStyle = textColor;
-        context.font = '100px Arial';
+        context.font = '100px Tahoma';
         if (chainActivity.scoreAmount !== undefined) {
           context.textAlign = 'center';
           context.fillText(
@@ -84,7 +101,7 @@ const ApplicantNftPage = () => {
 
         // Display an account id
         context.fillStyle = textColor;
-        context.font = '20px Arial';
+        context.font = '20px Tahoma';
         context.textAlign = 'center';
         if (wallet?._authData.accountId !== undefined) {
           context.fillText(
@@ -93,22 +110,56 @@ const ApplicantNftPage = () => {
             250
           );
         }
+        setDataUrl(context.canvas.toDataURL('image/png'));
       };
     }
-    // TODO: need to figure out a way to do this after loading all the assets!
-    setDataURL(context.canvas.toDataURL('image/png'));
   };
 
+  function dataURItoBlob(dataURI: string) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+      byteString = atob(dataURI.split(',')[1]);
+    else byteString = unescape(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI?.split(',')[0]?.split(':')[1]?.split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], { type: mimeString });
+  }
 
   const handleNftMint = async () => {
+    setToWaiting();
+    router.replace('/applicant/nft?status=loading');
+    const blob = dataURItoBlob(dataUrl);
+    const client = new NFTStorage({ token: NFT_STORAGE_KEY });
+
+    const cid = await client.storeBlob(blob);
+
+    const numOfNFT = await nftContract.nft_supply_for_owner({
+      account_id: wallet?._authData.accountId,
+    });
+
+    await nftWhitelistContract?.add_to_whitelist({
+      args: { account_id: wallet?._authData.accountId },
+    });
+
     await nftContract?.nft_mint({
       callbackUrl: `${process.env.NEXT_BASE_URL}/applicant/nft`,
       args: {
         token_id: tokenGenerator(),
         metadata: {
-          title: wallet?._authData.accountId + "'s NFT",
-          description: 'This is a placeholder image.',
-          media: 'https://picsum.photos/200/200',
+          title: `NearOracle Score #${Number(numOfNFT) + 1}`,
+          description: `${wallet?._authData.accountId}'s NFT #${
+            Number(numOfNFT) + 1
+          } : ${chainActivity?.scoreAmount}`,
+          media: cid,
         },
         receiver_id: wallet?._authData.accountId,
       },
@@ -130,18 +181,20 @@ const ApplicantNftPage = () => {
   return (
     <div className='px-14 py-10 w-full flex flex-col items-center text-center'>
       {' '}
-      {queryTransactionHash ? (
+      {queryTransactionHash && (
         <SuccessPage
           transactionHashes={queryTransactionHash}
           config={config}
           score={false}
         />
-      ) : (
+      )}
+      {awaitingScoreResponse && <LoadingContainer text='Minting your NFT...' />}
+      {!queryTransactionHash && queryStatus !== 'loading' && (
         <>
-          <h2 className='z-40 font-semibold text-xl sm:text-4xl mb-5 text-white'>
-            Create your NFT
+          <h2 className='z-40 font-semibold text-2xl sm:text-4xl mb-5 text-white'>
+            Custom design your NFT
           </h2>
-          <div className='grid gap-2 lg:grid-cols-2 w-full py-10'>
+          <div className='grid gap-2 lg:grid-cols-2 w-full justify-center py-10'>
             <div
               id='nft-container'
               className='relative'
@@ -154,6 +207,7 @@ const ApplicantNftPage = () => {
                 <div className='text-left text-md font-semibold mb-3'>
                   Background color 1
                 </div>
+
                 <input
                   type='color'
                   name='bg-color1'

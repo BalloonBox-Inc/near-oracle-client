@@ -17,25 +17,7 @@ const ScoreSpeedometer = ({
 }) => {
   const [randomNumber, setRandomNumber] = useState<string | null>("300");
   const rotationCalculator = (scr: number) => {
-    if (scr < 550) {
-      // for ever 50 after 300 percent, the value is +10 degrees
-      const multiplesOf50 = (scr - 300) / 50;
-      const result = -90 + multiplesOf50 * 10;
-      return result;
-    }
-
-    if (scr === 605) {
-      return 0;
-    }
-
-    if (scr > 550) {
-      const difference = scr - 605;
-
-      const result = 0.29 * difference;
-      return result;
-    }
-
-    return -90;
+    return (scr - 300) * 0.3 - 90;
   };
 
   const renderTagBgColor = (quality: string) => {
