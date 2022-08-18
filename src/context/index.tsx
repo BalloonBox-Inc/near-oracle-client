@@ -5,16 +5,23 @@ import React, {
   useMemo,
   useContext,
 } from "react";
-import { connect, WalletConnection, Contract, Account } from "near-api-js";
-import { useRouter } from "next/router";
-import { notification } from "antd";
+import {
+  connect,
+  WalletConnection,
+  Contract,
+  Account,
+  keyStores,
+  KeyPair,
+} from 'near-api-js';
+import { useRouter } from 'next/router';
+import { notification } from 'antd';
 
-import getConfig, { CONTRACT_NAME } from "@nearoracle/src/utils/config";
-import { ICoinbaseTokenCreateResponse } from "@nearoracle/pages/api/coinbase";
+import getConfig, { CONTRACT_NAME } from '@nearoracle/src/utils/config';
+import { ICoinbaseTokenCreateResponse } from '@nearoracle/pages/api/coinbase';
 import {
   IScoreResponsePlaid,
   IScoreResponseCoinbase,
-} from "@nearoracle/src/types/types";
+} from '@nearoracle/src/types/types';
 
 export type Set_Is_Connected = (isConnected: boolean) => void;
 export type Set_Score_Response = (
@@ -33,6 +40,8 @@ export type Smart_Contract = {
   query_score_history: (account_id: AccountIdParam) => void;
   store_score: ({ callbackUrl, args }: any) => void;
   nft_mint: ({ callbackUrl, args }: any) => void;
+  nft_supply_for_owner: (account_id: AccountIdParam) => void;
+  add_to_whitelist: ({ args }: any) => void;
 };
 
 export type AccountIdParam = {
@@ -49,8 +58,10 @@ export interface INearContext {
   setCoinbaseToken: Set_Coinbase_Token;
   plaidPublicToken: Plaid_Token;
   setPlaidPublicToken: Set_Plaid_Token;
-  contract: Smart_Contract;
+  scoreContract: Smart_Contract;
   nftContract: Smart_Contract;
+  scoreWhitelistContract: Smart_Contract;
+  nftWhitelistContract: Smart_Contract;
   chainActivity: IChainActivity;
   setChainActivity: Set_Chain_Activity;
   handleSetChainActivity: Handle_Set_Chain_Activity;
@@ -117,8 +128,10 @@ const initialState = {
   chainActivity: CHAIN_ACTIVITIES_INIT,
   coinbaseToken: null,
   plaidPublicToken: null,
-  contract: null,
+  scoreContract: null,
+  scoreWhitelistContract: null,
   nftContract: null,
+  nftWhitelistContract: null,
 };
 
 function contextReducer(state: any, action: any) {
@@ -158,23 +171,33 @@ function contextReducer(state: any, action: any) {
         ...state,
         plaidPublicToken: action.payload,
       };
-    case 'SET_CONTRACT':
+    case 'SET_SCORE_WHITELIST_CONTRACT':
       return {
         ...state,
-        contract: action.payload,
+        scoreWhitelistContract: action.payload,
+      };
+    case 'SET_SCORE_CONTRACT':
+      return {
+        ...state,
+        scoreContract: action.payload,
+      };
+    case 'SET_NFT_WHITELIST_CONTRACT':
+      return {
+        ...state,
+        nftWhitelistContract: action.payload,
       };
     case 'SET_NFT_CONTRACT':
       return {
         ...state,
         nftContract: action.payload,
       };
+
     default:
       return state;
   }
 }
 
 const ContextProvider = ({ children }: any) => {
-  const config = getConfig('testnet');
   const [state, dispatch] = useReducer(contextReducer, initialState);
 
   const handlers = useMemo(() => {
@@ -194,10 +217,14 @@ const ContextProvider = ({ children }: any) => {
         dispatch({ type: 'SET_COINBASE_TOKEN', payload: coinbaseToken }),
       setPlaidPublicToken: (plaidPublicToken: Plaid_Token) =>
         dispatch({ type: 'SET_PLAID_PUBLIC_TOKEN', payload: plaidPublicToken }),
-      setContract: (contract: Contract | null) =>
-        dispatch({ type: 'SET_CONTRACT', payload: contract }),
+      setScoreContract: (contract: Contract | null) =>
+        dispatch({ type: 'SET_SCORE_CONTRACT', payload: contract }),
       setNftContract: (contract: Contract | null) =>
         dispatch({ type: 'SET_NFT_CONTRACT', payload: contract }),
+      setScoreWhitelistContract: (contract: Contract | null) =>
+        dispatch({ type: 'SET_SCORE_WHITELIST_CONTRACT', payload: contract }),
+      setNftWhitelistContract: (contract: Contract | null) =>
+        dispatch({ type: 'SET_NFT_WHITELIST_CONTRACT', payload: contract }),
     };
   }, []);
 
@@ -208,8 +235,10 @@ const ContextProvider = ({ children }: any) => {
     setScoreResponse,
     setCoinbaseToken,
     setPlaidPublicToken,
-    setContract,
+    setScoreContract,
     setNftContract,
+    setScoreWhitelistContract,
+    setNftWhitelistContract,
     setChainActivity,
   } = handlers;
 
@@ -220,37 +249,83 @@ const ContextProvider = ({ children }: any) => {
     scoreResponse,
     coinbaseToken,
     plaidPublicToken,
-    contract,
+    scoreContract,
     nftContract,
+    scoreWhitelistContract,
+    nftWhitelistContract,
     chainActivity,
   } = state;
 
   const router = useRouter();
 
   useEffect(() => {
+    const config = getConfig('testnet');
+    const contract_owner = process.env.CONTRACT_OWNER_PRIVATE_KEY as string;
+
     const initContract = async () => {
-      // Initialize connection to the NEAR testnet
+      // Initialize connection to the network (testnet/mainnet)
       const near = await connect(config);
+      const networkId = 'testnet';
+
+      const keyStore = new keyStores.InMemoryKeyStore();
+      const keyPair = KeyPair.fromString(contract_owner);
+
+      await keyStore.setKey('testnet', 'bbox.testnet', keyPair);
+
+      const signerConfig = {
+        networkId,
+        keyStore,
+        nodeUrl: `https://rpc.${networkId}.near.org`,
+        walletUrl: `https://wallet.${networkId}.near.org`,
+        helperUrl: `https://helper.${networkId}.near.org`,
+        explorerUrl: `https://explorer.${networkId}.near.org`,
+        headers: {},
+      };
+
+      const near2 = await connect(signerConfig);
+      const signerAccount = await near2.account('bbox.testnet');
+
       // Initializing wallet based account.
       const nearWallet = new WalletConnection(near, 'near-oracle');
       setWallet(nearWallet);
 
-      // Initializing the contract APIs by contract name and configuration
+      // Initializing the four different contract APIs by contract name and configuration
+      const scoreWhitelistContract = new Contract(
+        signerAccount,
+        process.env.SCORE_CONTRACT_NAME as string,
+        {
+          viewMethods: ['contract_owner'],
+          changeMethods: ['add_to_whitelist'],
+        }
+      );
+
+      setScoreWhitelistContract(scoreWhitelistContract);
+
       const scoreContract = new Contract(
-        nearWallet.account(), // NEAR account to sign change method transactions
-        CONTRACT_NAME, // the account where the contract has been deployed
+        nearWallet.account(),
+        process.env.SCORE_CONTRACT_NAME as string,
         {
           viewMethods: ['query_score_history'],
           changeMethods: ['store_score'],
         }
       );
-      setContract(scoreContract);
+      setScoreContract(scoreContract);
+
+      const nftWhitelistContract = new Contract(
+        signerAccount, // NEAR account to sign change method transactions
+        process.env.NFT_CONTRACT_NAME as string, // the account where the contract has been deployed
+        {
+          viewMethods: ['contract_owner'],
+          changeMethods: ['add_to_whitelist'],
+        }
+      );
+      setNftWhitelistContract(nftWhitelistContract);
 
       const nftContract = new Contract(
         nearWallet.account(),
-        'nft.bbox.testnet',
+        process.env.NFT_CONTRACT_NAME as string,
         {
-          viewMethods: ['whose_token'],
+          viewMethods: ['nft_supply_for_owner', 'contract_owner'],
           changeMethods: ['nft_mint'],
         }
       );
@@ -348,8 +423,10 @@ const ContextProvider = ({ children }: any) => {
         setCoinbaseToken,
         plaidPublicToken,
         setPlaidPublicToken,
-        contract,
+        scoreContract,
         nftContract,
+        scoreWhitelistContract,
+        nftWhitelistContract,
         setChainActivity,
         chainActivity,
         handleSetChainActivity,

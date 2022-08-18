@@ -1,49 +1,43 @@
 import { keyStores } from "near-api-js";
-
-// Define the name of the smart contract that we want to interact with
-// This is the name of the account where the smart contract is deployed to.
-export const CONTRACT_NAME = process.env.CONTRACT_NAME || "score.bbox.testnet";
+export const CONTRACT_NAME = process.env.CONTRACT_NAME || 'store.bbox.testnet';
 
 // Function that returns a NEAR connection configuration object based on the given environment.
-export const getConfig = (environment = "testnet") => {
+export const getConfig = (environment = 'testnet') => {
   const handleKeyStore = () => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       return new keyStores.BrowserLocalStorageKeyStore();
     }
   };
 
   switch (environment) {
-    case "mainnet":
+    case 'mainnet':
       return {
-        networkId: "mainnet",
+        networkId: 'mainnet',
         keyStore: handleKeyStore(),
-        nodeUrl: "https://rpc.mainnet.near.org",
-        walletUrl: "https://wallet.mainnet.near.org",
-        helperUrl: "https://helper.mainnet.near.org",
-        explorerUrl: "https://explorer.mainnet.near.org",
-        contractName: CONTRACT_NAME,
+        nodeUrl: 'https://rpc.mainnet.near.org',
+        walletUrl: 'https://wallet.mainnet.near.org',
+        helperUrl: 'https://helper.mainnet.near.org',
+        explorerUrl: 'https://explorer.mainnet.near.org',
         headers: {},
       };
-    case "betanet":
+    case 'betanet':
       return {
-        networkId: "betanet",
+        networkId: 'betanet',
         keyStore: handleKeyStore(),
-        nodeUrl: "https://rpc.betanet.near.org",
-        walletUrl: "https://wallet.betanet.near.org",
-        helperUrl: "https://helper.betanet.near.org",
-        contractName: CONTRACT_NAME,
+        nodeUrl: 'https://rpc.betanet.near.org',
+        walletUrl: 'https://wallet.betanet.near.org',
+        helperUrl: 'https://helper.betanet.near.org',
         headers: {},
       };
-    case "testnet":
+    case 'testnet':
     default:
       return {
-        networkId: "testnet",
+        networkId: 'testnet',
         keyStore: handleKeyStore(),
-        nodeUrl: "https://rpc.testnet.near.org",
-        walletUrl: "https://wallet.testnet.near.org",
-        helperUrl: "https://helper.testnet.near.org",
-        explorerUrl: "https://explorer.testnet.near.org",
-        contractName: CONTRACT_NAME,
+        nodeUrl: 'https://rpc.testnet.near.org',
+        walletUrl: 'https://wallet.testnet.near.org',
+        helperUrl: 'https://helper.testnet.near.org',
+        explorerUrl: 'https://explorer.testnet.near.org',
         headers: {},
       };
   }

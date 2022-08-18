@@ -30,6 +30,10 @@ enum ScoreQuality {
     };
     message: string;
     score: number;
+    risk: {
+      loan_amount: number;
+      risk_level: 'low' | 'medium' | 'high';
+    };
     status_code: 200 | 400;
     status: 'success' | 'error';
     title: 'Credit Score';
@@ -81,6 +85,10 @@ enum ScoreQuality {
     };
     message: string;
     score: number;
+    risk: {
+      loan_amount: number;
+      risk_level: 'low' | 'medium' | 'high';
+    };
     status_code: 200 | 400;
     status: 'success' | 'error';
     timestamp: string;

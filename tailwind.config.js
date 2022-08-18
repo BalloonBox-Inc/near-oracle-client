@@ -12,6 +12,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Avenir Next', ...deafaultTheme.fontFamily.sans],
+        raleway: ['Raleway', 'sans-serif'],
       },
       backgroundImage: {
         'main-image': "url('/images/bg-img.svg')",

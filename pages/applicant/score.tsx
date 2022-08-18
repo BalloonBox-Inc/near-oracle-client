@@ -20,15 +20,19 @@ import getConfig from '@nearoracle/src/utils/config';
 
 const ApplicantScorePage = () => {
   const {
+    wallet,
     scoreResponse,
     loading,
-    contract,
+    scoreContract,
+    scoreWhitelistContract,
     chainActivity,
     handleSetChainActivity,
   } = useNearContext();
 
-  const [{ statusLoading, statusSuccess }, { setSuccessStatus }] =
-    useSetStatus();
+  const [
+    { statusLoading, statusSuccess },
+    { setLoadingStatus, setSuccessStatus },
+  ] = useSetStatus();
 
   const [showScore, setShowScore] = useState<boolean>(false);
   const [showScoreDescription, setShowScoreDescription] = useState(false);
@@ -54,8 +58,12 @@ const ApplicantScorePage = () => {
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
   ) => {
     if (scoreResponse) {
-      // This redirects to the Wallet SDK, and once the transaction has been approved, redirects back to the app with a transactionHashes query parameter.
-      await contract?.store_score({
+      setLoadingStatus();
+      await scoreWhitelistContract?.add_to_whitelist({
+        args: { account_id: wallet?._authData.accountId },
+      });
+
+      await scoreContract?.store_score({
         callbackUrl: `${process.env.NEXT_BASE_URL}/applicant/score`,
         args: {
           score: scoreResponse?.score,
@@ -125,17 +133,31 @@ const ApplicantScorePage = () => {
         />
       ) : (
         <>
-          <h2 className='z-40 font-semibold text-xl sm:text-4xl mb-1'>
+          <h2 className='z-40 font-semibold text-2xl sm:text-4xl mb-1'>
             Your NearOracle score
           </h2>
           <p className='text-lg'>
             Calculated with {renderProvider(scoreResponse)}
           </p>
-          <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
+          {/* <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
             Loan amount requested:{' '}
             <h2 className='text-4xl font-semibold text-white ml-2 mb-0'>
               {'US$' + Number(loanRequest)?.toLocaleString()}
             </h2>{' '}
+          </div> */}
+          <div className='bg-white/10 border-1 flex flex-col justify-center items-center py-3 rounded-md w-72'>
+            Eligible loan amount:{' '}
+            <h2 className='text-2xl sm:text-4xl font-semibold text-white ml-2 mb-0'>
+              {'US$' +
+                Number(scoreResponse?.risk?.loan_amount)?.toLocaleString()}
+            </h2>{' '}
+            <div className='mt-1'>
+              (Requested loan amount:{' '}
+              <span className='font-medium'>
+                {'US$' + Number(loanRequest)?.toLocaleString()}
+              </span>
+              )
+            </div>
           </div>
 
           {scoreResponse?.score && (
@@ -207,11 +229,11 @@ const ApplicantScorePage = () => {
                 <p className='sm:text-base leading-7 mb-3 text-white'>
                   {scoreResponse?.message || scoreResponse?.message}
                 </p>
-                <Link href='/learn'>
+                <a href='/learn' target='_blank' className='text-white'>
                   <p className='underline cursor-pointer hover:text-gray-500'>
                     Learn more
                   </p>
-                </Link>
+                </a>
               </div>
             </div>
           </Modal>
