@@ -31,7 +31,13 @@ export default function HeroSection({ isConnected }: { isConnected: boolean }) {
               <Connect />
             )}
           </div>
-          <Button style={BUTTON_STYLES.OUTLINE} text='Learn more' />
+          <Button
+            style={BUTTON_STYLES.OUTLINE}
+            text='Learn more'
+            onClick={() => {
+              router.push('/learn');
+            }}
+          />
         </div>
       </div>
     </div>
