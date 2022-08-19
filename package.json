@@ -5,16 +5,44 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p $PORT",
+    "prepare": "husky install",
+    "lint": "next lint",
+    "lint:ts": "tslint --project tsconfig.json --config tslint.json",
+    "check-types": "tsc --pretty --noEmit"
+  },
+  "lint-staged": {
+    "*.ts": "yarn lint:ts",
+    "*.tsx": "yarn lint:ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn run test:unit"
+    }
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
+    "@types/ramda": "^0.28.15",
+    "@types/react-lottie": "^1.2.6",
+    "antd": "^4.20.4",
+    "axios": "^0.27.2",
     "classnames": "^2.3.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "husky": "^8.0.1",
+    "mime": "^3.0.0",
     "near-api-js": "^0.44.2",
     "next": "12.1.6",
+    "nft.storage": "^7.0.0",
+    "node-fetch": "^3.2.6",
+    "plaid": "^10.4.0",
+    "ramda": "^0.28.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-spinners": "^0.11.0"
+    "react-lottie": "^1.2.3",
+    "react-plaid-link": "^3.3.2",
+    "react-spinners": "^0.11.0",
+    "react-starfield-animation": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "17.0.31",

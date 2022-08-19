@@ -1,34 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 NEAROracle
+![primary-logo](https://user-images.githubusercontent.com/82831286/174408312-d30520fb-c77a-4f2c-aa3e-b754ac7a797a.png)
 
-## Getting Started
+⚡️ This is the client side for NEAROracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Husky, Lint-Staged, VSCode, PostCSS, Tailwind CSS.
 
-First, run the development server:
+### Features
 
-```bash
-npm run dev
-# or
-yarn dev
+Developer experience first:
+
+- 🔥 [Next.js](https://nextjs.org) for a Server Side Rendered Static Site
+- 🎨 Integrated with [Tailwind CSS](https://tailwindcss.com) & [Ant Design](https://ant.design/)
+- 🎉 Type checking [TypeScript](https://www.typescriptlang.org)
+- ✏️ Linter with [ESLint](https://eslint.org) (default NextJS, NextJS Core Web Vitals and Airbnb configuration)
+- 💡 Absolute Imports
+- 🛠 Code Formatter with [Prettier](https://prettier.io)
+- 🦊 Husky for Git Hooks
+- 🚫 Lint-staged for running linters on Git staged files
+- 🗂 VSCode configuration: Debug, Settings, Tasks and extension for PostCSS, ESLint, Prettier, TypeScript
+- 🤖 SEO metadata, JSON-LD and Open Graph tags with Next SEO
+
+### Requirements
+
+- Node.js and npm or yarn
+
+### Getting started
+
+Run the following command on your local environment:
+
+```
+git clone  ... my-project-name
+cd my-project-name
+git checkout develop
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Credentials Required
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The dApp requires eitehr a NEAR [testnet](https://wallet.testnet.near.org/) or [mainnet](https://wallet.near.org/) wallet.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+You will also need to create an account on [Plaid](https://dashboard.plaid.com/) OR [Coinbase](https://developers.coinbase.com/) in order to receive client ids and client secrets for your api. 
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Create a .env.local file in your root folder:
 
-## Learn More
+```
+NEXT_BASE_URL=http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+COINBASE_CLIENT_ID=your_client_Id
+COINBASE_CLIENT_SECRET=your_client_secret
+COINBASE_AUTHORIZE_URL=https://www.coinbase.com/oauth/authorize
+COINBASE_TOKEN_URL=https://api.coinbase.com/oauth/token
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+PLAID_CLIENT_ID=your_client_id
+PLAID_URL_SANDBOX=sandbox.plaid.com
+PLAID_SECRET_KEY_SANDBOX=your_sandbox_key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+BACKEND_BASE_URL=https://dev-near-oracle-backend.herokuapp.com
+COINMARKET_KEY=your_coinmarketcapapikey
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Then, you can run locally in development mode with live reload. Ensure you run this command after `cd` into the local folder where you cloned the repo.

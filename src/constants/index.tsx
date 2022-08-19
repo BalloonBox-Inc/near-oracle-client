@@ -1,2 +1,2 @@
 export const BORDER_GRADIENT_STYLE =
-  "linear-gradient(180deg, rgba(85,42,170,1) 0%, rgba(7,144,192,1) 100%)";
+  "linear-gradient(90deg,rgba(85, 75, 249, 1) 0%, rgba(143, 0, 255, 1) 37%, rgba(153, 66, 142, 1) 79%,rgba(224, 60, 55, 1) 100%";
