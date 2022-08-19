@@ -33,7 +33,7 @@ const config = {
   user: {
     client_user_id: "unique_per_user",
   },
-  products: ["auth", "transactions", "assets", "identity", "investments", "liabilities"],
+  products: ["transactions"],
   language: "en",
 };
 
