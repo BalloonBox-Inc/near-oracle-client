@@ -136,14 +136,17 @@ const ViewScore = () => {
       {loading && (
         <LoadingContainer text={`Loading the applicant's credit score..`} />
       )}
-      {!loading && !accountInfo && (
+      {!loading && !queryAccountId && (
         <>
           <div className='text-center z-10 px-0 sm:p-10'>
             <h2 className='font-semibold text-xl sm:text-3xl p-0'>
               View an Applicant's Score
             </h2>
             <div className='w-full px-10 md:px-40'>
-              <form className='flex flex-col mt-10'>
+              <form
+                className='flex flex-col mt-10'
+                onSubmit={() => handleViewScore(accountId)}
+              >
                 <label className='text-left mb-2'>
                   Applicant's NEAR Wallet ID
                 </label>
