@@ -1,7 +1,8 @@
-# 🚀 NEAROracle
-![primary-logo](https://user-images.githubusercontent.com/82831286/174408312-d30520fb-c77a-4f2c-aa3e-b754ac7a797a.png)
+# 🚀 NearOracle
 
-⚡️ This is the client side for NEAROracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Husky, Lint-Staged, VSCode, PostCSS, Tailwind CSS.
+![primary-banner](https://user-images.githubusercontent.com/82831286/185993806-279822d0-ffc5-4b7b-91d9-55ce7f4fbd60.png)
+
+⚡️ This is the client side for NearOracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS.
 
 ### Features
 
@@ -13,7 +14,6 @@ Developer experience first:
 - ✏️ Linter with [ESLint](https://eslint.org) (default NextJS, NextJS Core Web Vitals and Airbnb configuration)
 - 💡 Absolute Imports
 - 🛠 Code Formatter with [Prettier](https://prettier.io)
-- 🦊 Husky for Git Hooks
 - 🚫 Lint-staged for running linters on Git staged files
 - 🗂 VSCode configuration: Debug, Settings, Tasks and extension for PostCSS, ESLint, Prettier, TypeScript
 - 🤖 SEO metadata, JSON-LD and Open Graph tags with Next SEO
@@ -55,6 +55,11 @@ PLAID_SECRET_KEY_SANDBOX=your_sandbox_key
 
 BACKEND_BASE_URL=https://dev-near-oracle-backend.herokuapp.com
 COINMARKET_KEY=your_coinmarketcapapikey
+
+COVALENT_KEY=your_covalent_api_key
+
+NFT_STORAGE_KEY=your_nft_storage_key
+
 ```
 
 Then, you can run locally in development mode with live reload. Ensure you run this command after `cd` into the local folder where you cloned the repo.
