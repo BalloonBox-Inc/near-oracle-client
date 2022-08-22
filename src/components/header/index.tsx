@@ -28,6 +28,22 @@ export default function Header() {
           </a>
         </Link>
         <div className='flex items-center'>
+          <Link
+            passHref={true}
+            href={
+              ENV_CONFIG === 'testnet'
+                ? 'https://www.nearoracle.com/'
+                : 'https://test.nearoracle.com/'
+            }
+          >
+            <div
+              className={`mr-5 text-white font-semibold text-xs sm:text-sm md:text-base text-center cursor-pointer hover:text-gray-400 text-transparent near-bg-gradient background-clip ${
+                showAccount ? 'disappear' : 'reappear'
+              }`}
+            >
+              {ENV_CONFIG === 'testnet' ? 'Use Mainnet' : 'Use Testnet'}
+            </div>
+          </Link>
           {isConnected && (
             <Link passHref={true} href={'/start'}>
               <div
