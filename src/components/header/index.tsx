@@ -37,7 +37,7 @@ export default function Header() {
             }
           >
             <div
-              className={`mr-5 text-white font-semibold text-xs sm:text-sm md:text-base text-center cursor-pointer hover:text-gray-400 text-transparent near-bg-gradient background-clip ${
+              className={`mr-5 text-white font-semibold text-sm sm:text-sm md:text-base text-center cursor-pointer hover:text-gray-400 text-transparent near-bg-gradient background-clip ${
                 showAccount ? 'disappear' : 'reappear'
               }`}
             >
