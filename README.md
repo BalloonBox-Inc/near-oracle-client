@@ -4,7 +4,7 @@
 
 ### Overview
 
-NearOracle is an oracle for credit scoring that runs on the NEAR protocol and serves web3 users interested in lending or borrowing money in the crypto space. This is the client side repo for NearOracle, a dApp that BalloonBox developed through a grant by the [NEAR Foundation](https://near.foundation/). The oracle reads in the user's fiat or crypto financial history and uses it to calculate a numerical score, namely an integer representing a user's financial health. Ranking users through a credit score is essential to distinguish between trusted and suspicious agents in the web3 space. The dApp caters to a specific use case, namely unsecured P2P lending: facilitating lending and borrowing of crypto loans.
+NearOracle is an oracle for credit scoring that runs on the NEAR protocol and serves web3 users interested in lending or borrowing money in the crypto space. The dApp has been developed by BalloonBox through a grant by the [NEAR Foundation](https://near.foundation/). The dapp retrieves the user's fiat or crypto financial history from three validators (Plaid, Coinbase, MetaMask) and uses it to calculate a numerical score, namely an integer representing a user's financial health. Ranking users through a credit score is essential to distinguish between trusted and suspicious agents in the web3 space. The dApp caters to a specific use case, namely unsecured P2P lending: facilitating lending and borrowing of crypto loans.
 
 ###### How does the dApp work?
 
