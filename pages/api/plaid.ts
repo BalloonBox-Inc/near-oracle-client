@@ -85,6 +85,7 @@ export default async function handler(
         loan_request: req.body.loanRequest
       };
 
+      console.log(plaidBody);
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 
       if (plaid_score_res.status === "error") {
