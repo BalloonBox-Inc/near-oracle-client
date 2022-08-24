@@ -277,7 +277,7 @@ const ContextProvider = ({ children }: any) => {
  
       await keyStore.setKey(
         networkId as string,
-        networkId === 'testnet' ? 'bbox.testnet' : 'bbox.near',
+        networkId === 'testnet' ? 'bbox.testnet' : 'balloonbox.near',
         keyPair
       );
 
