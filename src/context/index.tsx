@@ -274,7 +274,12 @@ const ContextProvider = ({ children }: any) => {
       const keyStore = new keyStores.InMemoryKeyStore();
       const keyPair = KeyPair.fromString(contract_owner);
 
-      await keyStore.setKey('testnet', 'bbox.testnet', keyPair);
+ 
+      await keyStore.setKey(
+        networkId as string,
+        networkId === 'testnet' ? 'bbox.testnet' : 'bbox.near',
+        keyPair
+      );
 
       const signerConfig = {
         networkId,
@@ -287,7 +292,9 @@ const ContextProvider = ({ children }: any) => {
       };
 
       const near2 = await connect(signerConfig);
-      const signerAccount = await near2.account('bbox.testnet');
+      const signerAccount = await near2.account(
+        networkId === 'testnet' ? 'bbox.testnet' : 'bbox.near'
+      );
 
       // Initializing the four different contract APIs by contract name and configuration
       const scoreWhitelistContract = new Contract(
