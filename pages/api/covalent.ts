@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 coinmarketcap_key:COINMARKET_KEY,
                 loan_request: req.body.loan_request,
                 }
-            
+            console.log(body);
             const backend_response = await fetch(COVALENT_ENDPOINT, {
                 method: "POST",
                 headers: {
@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
                 body: JSON.stringify(body),
             })
 
+            console.log(backend_response);
 
             const covalentScore = await backend_response.json();
             res.send({covalentScore})
