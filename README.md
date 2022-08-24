@@ -1,18 +1,12 @@
-# NearOracle :ringed_planet: : Credit Scoring on NEAR Protocol 🔮  
+<p align="center">
+  <a href="https://near.org/">
+    <img alt="Near" src="https://github.com/BalloonBox-Inc/near-oracle-client/blob/develop/public/images/planets/inverted-primary-logo.png" width="700" />
+  </a>
+</p>
 
-![primary-banner](https://user-images.githubusercontent.com/82831286/185993806-279822d0-ffc5-4b7b-91d9-55ce7f4fbd60.png)
+## NearOracle dApp frontend :eyes: :genie: :zap:
 
-### Overview
-
-NearOracle is an oracle for credit scoring that runs on the NEAR protocol and serves web3 users interested in lending or borrowing money in the crypto space. The dApp has been developed by BalloonBox through a grant by the [NEAR Foundation](https://near.foundation/). The dapp retrieves the user's fiat or crypto financial history from three validators (Plaid, Coinbase, MetaMask) and uses it to calculate a numerical score, namely an integer representing a user's financial health. Ranking users through a credit score is essential to distinguish between trusted and suspicious agents in the web3 space. The dApp caters to a specific use case, namely unsecured P2P lending: facilitating lending and borrowing of crypto loans.
-
-###### How does the dApp work?
-
-- It acquires user's financial data by integrating with three validators ([Plaid](https://dashboard.plaid.com/overview), [Coinbase](https://developers.coinbase.com/), and [MetaMask](https://metamask.io/))
-- It runs the credit scoring algorithm to compute a score assessing a user's financial health
-- It writes the score to the blockchain via a Wasm smart contract build using the Rust `NEAR SDK`
-
-###### In this Repo
+### In this Repo 
 
 This is the client side repo for NearOracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
 
