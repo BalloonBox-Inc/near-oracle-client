@@ -6,6 +6,7 @@ const {
   PLAID_SECRET_KEY_SANDBOX,
   PLAID_URL_SANDBOX,
   COINMARKET_KEY,
+  ENV_CONFIG,
 } = process.env;
 
 const PLAID_ENDPOINT = `${process.env.BACKEND_BASE_URL}/credit_score/plaid`;
@@ -88,12 +89,13 @@ export default async function handler(
       console.log(plaidBody);
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 
-      if (plaid_score_res.status === "error") {
+      if (ENV_CONFIG === 'testnet' && plaid_score_res.status === "error") {
         setTimeout(async () => {
           plaid_score_res = await get_plaid_score(req, res, plaidBody);
           res.send({ plaid_score_res });
         }, 3000);
       } else res.send({ plaid_score_res });
+
       return;
     } catch (error) {
       res.send({ error });
