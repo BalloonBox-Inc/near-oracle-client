@@ -293,7 +293,7 @@ const ContextProvider = ({ children }: any) => {
 
       const near2 = await connect(signerConfig);
       const signerAccount = await near2.account(
-        networkId === 'testnet' ? 'bbox.testnet' : 'bbox.near'
+        networkId === 'testnet' ? 'bbox.testnet' : 'balloonbox.near'
       );
 
       // Initializing the four different contract APIs by contract name and configuration
