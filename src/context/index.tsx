@@ -259,7 +259,7 @@ const ContextProvider = ({ children }: any) => {
   const router = useRouter();
 
   useEffect(() => {
-    const config = getConfig(process.env.ENV_CONFIG);
+    const config = getConfig(process.env.ENV_CONFIG as string);
     const contract_owner = process.env.CONTRACT_OWNER_PRIVATE_KEY as string;
 
     const initContract = async () => {

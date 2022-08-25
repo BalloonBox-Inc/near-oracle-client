@@ -41,8 +41,9 @@ const ApplicantScorePage = () => {
 
   const queryTransactionHash = router?.query?.transactionHashes;
   const queryErrorCode = router?.query?.errorCode;
+  const ENV_CONFIG = process.env.ENV_CONFIG as string;
 
-  const config = getConfig();
+  const config = getConfig(ENV_CONFIG);
 
   const renderProvider = (
     scoreResponse: IScoreResponseCoinbase | IScoreResponsePlaid | null
