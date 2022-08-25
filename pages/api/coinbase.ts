@@ -39,8 +39,6 @@ export default async function handler(
         loan_request: req.query?.loan_request,
       };
 
-      console.log(body)
-
       const backend_response = await fetch(COINBASE_ENDPOINT, {
         method: "POST",
         headers: {
@@ -49,7 +47,6 @@ export default async function handler(
         body: JSON.stringify(body),
       });
 
-      console.log(backend_response)
       const coinbaseScore = await backend_response.json();
 
       res.send({ coinbaseScore });
