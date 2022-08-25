@@ -35,9 +35,12 @@ const ApplicantNftPage = () => {
   const queryErrorCode = router?.query?.errorCode;
   const queryStatus = router?.query?.status;
 
-  const config = getConfig();
-
   const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY as string;
+  const ENV_CONFIG = process.env.ENV_CONFIG as string;
+
+  const config = getConfig(ENV_CONFIG);
+
+
 
   useEffect(() => {
     queryTransactionHash && handleSetChainActivity({ nftMinted: true });

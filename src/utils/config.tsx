@@ -1,8 +1,7 @@
-import { keyStores } from "near-api-js";
-export const CONTRACT_NAME = process.env.CONTRACT_NAME || 'store.bbox.testnet';
+import { keyStores } from 'near-api-js';
 
 // Function that returns a NEAR connection configuration object based on the given environment.
-export const getConfig = (environment = 'testnet') => {
+export const getConfig = (environment: string) => {
   const handleKeyStore = () => {
     if (typeof window !== 'undefined') {
       return new keyStores.BrowserLocalStorageKeyStore();
