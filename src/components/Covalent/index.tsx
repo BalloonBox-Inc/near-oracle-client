@@ -56,7 +56,6 @@ const Covalent = ({
             router.replace('/applicant/generate');
           }
         } catch (error) {
-          console.log(error);
           notification.error({ message: 'Error connecting covalent' });
           setNotWaiting();
         }

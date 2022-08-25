@@ -12,7 +12,7 @@ const {
 const PLAID_ENDPOINT = `${process.env.BACKEND_BASE_URL}/credit_score/plaid`;
 
 const clientConfig = new Configuration({
-  basePath: PlaidEnvironments.sandbox,
+  basePath: ENV_CONFIG==='testnet' ?  PlaidEnvironments.sandbox : PlaidEnvironments.development,
   baseOptions: {
     headers: {
       "PLAID-CLIENT-ID": PLAID_CLIENT_ID,
@@ -82,26 +82,24 @@ export default async function handler(
         plaid_access_token: access_token,
         plaid_client_id: PLAID_CLIENT_ID,
         plaid_client_secret: PLAID_SECRET_KEY_SANDBOX,
-        coinmarketcap_key: COINMARKET_KEY,
+        coinmarketcap_key: COINMARKET_KEY, 
         loan_request: req.body.loanRequest
       };
-
-      console.log(plaidBody);
+   
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 
-      if (ENV_CONFIG === 'testnet' && plaid_score_res.status === "error") {
+      if (plaid_score_res.status === "error") {
         setTimeout(async () => {
           plaid_score_res = await get_plaid_score(req, res, plaidBody);
-          res.send({ plaid_score_res });
+          res.send({ plaid_score_res }); 
         }, 3000);
       } else res.send({ plaid_score_res });
-
       return;
     } catch (error) {
       res.send({ error });
     }
   }
-
+  
 
    // create a link token
    try {
