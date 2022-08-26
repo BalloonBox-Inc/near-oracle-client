@@ -94,7 +94,7 @@ You will need the credentials & accounts listed below to get started:
 2. API keys and credentials from data providers
 
   - CoinMarketCap API key &#8594; follow the Developers guide [here](https://coinmarketcap.com/api/documentation/v1/#section/Introduction)
-  - Plaid client_id and secret_key &#8594; create a Plaid account [here](https://dashboard.plaid.com/signin), then retrieve your Plaid [keys] (https://dashboard.plaid.com/team/keys)
+  - Plaid client_id and secret_key &#8594; create a Plaid account [here](https://dashboard.plaid.com/signin), then retrieve your Plaid [keys](https://dashboard.plaid.com/team/keys)
   - Coinbase API Key &#8594; create a Coinbase account [here](https://www.coinbase.com/signup), then retrieve your Coinbase [keys](https://www.coinbase.com/settings/api) </br>
   To generate a new set of API keys follow this flow: `Coinbase` -> `settings` -> `API` -> `New API Key`.
   - Covalent API key &#8594; register [here](https://www.covalenthq.com/platform/#/auth/register/)
