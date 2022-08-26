@@ -8,7 +8,7 @@
 
 ### In this Repo 
 
-This is the client side repo for NearOracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
+This is the client side repo for [NearOracle](https://nearoracle.com), made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
 
 Continue to read these docs to clone this project and spin it up in your local machine.
 
@@ -139,15 +139,17 @@ ENV_CONFIG=testnet | mainnet
 
 Then, you can run locally in development mode with live reload. Ensure you run this command after `cd` into the local folder where you cloned the repo.
 
-### Helpful documents
+### Helpful Docs & Links
 
-1. Coinbase OAuth Doc:
+- NEAR JavaScript API Quick Reference: https://docs.near.org/tools/near-api-js/quick-reference
+- NEAR Type Docs: https://near.github.io/near-api-js/
+- Coinbase OAuth Doc:
 https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-withpcoinbase-integration
 
-2. Plaid Sandbox Docs:
+- Plaid Sandbox Docs:
 https://plaid.com/docs/sandbox/
 
-3. Plaid Token Endpoints Docs:
+- Plaid Token Endpoints Docs:
 https://plaid.com/docs/api/tokens/#linktokencreate
 
 
