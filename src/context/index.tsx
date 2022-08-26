@@ -260,7 +260,8 @@ const ContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     const config = getConfig(process.env.ENV_CONFIG as string);
-    const contract_owner = process.env.CONTRACT_OWNER_PRIVATE_KEY as string;
+    const contract_owner_id = process.env.CONTRACT_OWNER_ID as string;
+    const contract_owner_key = process.env.CONTRACT_OWNER_PRIVATE_KEY as string;
 
     const initContract = async () => {
       // Initialize connection to the network (testnet/mainnet)
@@ -272,14 +273,9 @@ const ContextProvider = ({ children }: any) => {
       setWallet(nearWallet);
 
       const keyStore = new keyStores.InMemoryKeyStore();
-      const keyPair = KeyPair.fromString(contract_owner);
+      const keyPair = KeyPair.fromString(contract_owner_key);
 
- 
-      await keyStore.setKey(
-        networkId as string,
-        networkId === 'testnet' ? 'bbox.testnet' : 'balloonbox.near',
-        keyPair
-      );
+      await keyStore.setKey(networkId, contract_owner_id, keyPair);
 
       const signerConfig = {
         networkId,
@@ -292,9 +288,7 @@ const ContextProvider = ({ children }: any) => {
       };
 
       const near2 = await connect(signerConfig);
-      const signerAccount = await near2.account(
-        networkId === 'testnet' ? 'bbox.testnet' : 'balloonbox.near'
-      );
+      const signerAccount = await near2.account(contract_owner_id);
 
       // Initializing the four different contract APIs by contract name and configuration
       const scoreWhitelistContract = new Contract(
