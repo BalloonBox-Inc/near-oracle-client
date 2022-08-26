@@ -143,7 +143,7 @@ Then, you can run locally in development mode with live reload. Ensure you run t
 
 - NEAR JavaScript API Quick Reference: https://docs.near.org/tools/near-api-js/quick-reference
 - NEAR Type Docs: https://near.github.io/near-api-js/
-- Coinbase OAuth Doc:
+- Coinbase OAuth Docs:
 https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-withpcoinbase-integration
 
 - Plaid Sandbox Docs:
