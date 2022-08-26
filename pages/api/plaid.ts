@@ -3,8 +3,8 @@ import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
 
 const {
   PLAID_CLIENT_ID,
-  PLAID_SECRET_KEY_SANDBOX,
-  PLAID_URL_SANDBOX,
+  PLAID_SECRET_KEY,
+  PLAID_URL,
   COINMARKET_KEY,
   ENV_CONFIG,
 } = process.env;
@@ -16,7 +16,7 @@ const clientConfig = new Configuration({
   baseOptions: {
     headers: {
       "PLAID-CLIENT-ID": PLAID_CLIENT_ID,
-      "PLAID-SECRET": PLAID_SECRET_KEY_SANDBOX,
+      "PLAID-SECRET": PLAID_SECRET_KEY,
     },
   },
 });
@@ -28,7 +28,7 @@ export interface ITokenExchangeProps {
 
 const config = {
   client_id: PLAID_CLIENT_ID,
-  secret: PLAID_SECRET_KEY_SANDBOX,
+  secret: PLAID_SECRET_KEY,
   client_name: "NearOracle",
   country_codes: ["US", "CA"],
   user: {
@@ -65,7 +65,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const url = `https://${PLAID_URL_SANDBOX}/link/token/create`;
+  const url = `https://${PLAID_URL}/link/token/create`;
   const isExchange = req.query.exchange;
 
   if (isExchange) {
@@ -81,10 +81,12 @@ export default async function handler(
       const plaidBody = {
         plaid_access_token: access_token,
         plaid_client_id: PLAID_CLIENT_ID,
-        plaid_client_secret: PLAID_SECRET_KEY_SANDBOX,
+        plaid_client_secret: PLAID_SECRET_KEY,
         coinmarketcap_key: COINMARKET_KEY, 
         loan_request: req.body.loanRequest
       };
+
+      console.log(plaidBody);
    
       let plaid_score_res = await get_plaid_score(req, res, plaidBody);
 
