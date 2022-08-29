@@ -8,7 +8,7 @@
 
 ### In this Repo 
 
-This is the client side repo for NearOracle, made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
+This is the client side repo for [NearOracle](https://nearoracle.com), made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
 
 Continue to read these docs to clone this project and spin it up in your local machine.
 
@@ -43,6 +43,49 @@ git checkout develop
 yarn install
 ```
 
+### Folder Structure
+
+```bash
+near-oracle-client
+├── README.md
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── pages
+│   ├── _app.tsx
+│   ├── _document.tsx
+│   ├── api
+│   │   └── coinbase.ts              # api calls to the coinbase validator
+│   │   └── covalent.ts              # api calls to the covalent validator
+│   │   └── plaid.ts                 # api calls to the plaid validator
+│   ├── applicant
+│   ├── index.tsx
+│   ├── learn
+│   ├── provider
+│   └── start
+├── postcss.config.js
+├── public
+│   └── images
+├── src
+│   ├── components
+│   │   └── ...
+│   │   └── Covalent                 # MetaMask SDK Integration
+│   │   └── Plaid                    # Plaid Link SDK Integration
+│   │   └── Coinbase                 # Coinbase OAuth Integration
+│   ├── constants
+│   ├── context                      # where the NEAR connection & wallet are initiated
+│   ├── services
+│   ├── types
+│   └── utils
+├── styles
+│   └── styles.css
+├── tailwind.config.js
+├── tsconfig.json
+├── tsconfig.tsbuildinfo
+├── yarn-error.log
+└── yarn.lock
+```
+
 ### Credentials Required
 
 You will need the credentials & accounts listed below to get started:
@@ -51,7 +94,7 @@ You will need the credentials & accounts listed below to get started:
 2. API keys and credentials from data providers
 
   - CoinMarketCap API key &#8594; follow the Developers guide [here](https://coinmarketcap.com/api/documentation/v1/#section/Introduction)
-  - Plaid client_id and secret_key &#8594; create a Plaid account [here](https://dashboard.plaid.com/signin), then retrieve your Plaid [keys] (https://dashboard.plaid.com/team/keys)
+  - Plaid client_id and secret_key &#8594; create a Plaid account [here](https://dashboard.plaid.com/signin), then retrieve your Plaid [keys](https://dashboard.plaid.com/team/keys)
   - Coinbase API Key &#8594; create a Coinbase account [here](https://www.coinbase.com/signup), then retrieve your Coinbase [keys](https://www.coinbase.com/settings/api) </br>
   To generate a new set of API keys follow this flow: `Coinbase` -> `settings` -> `API` -> `New API Key`.
   - Covalent API key &#8594; register [here](https://www.covalenthq.com/platform/#/auth/register/)
@@ -74,8 +117,8 @@ COINBASE_AUTHORIZE_URL=https://www.coinbase.com/oauth/authorize
 COINBASE_TOKEN_URL=https://api.coinbase.com/oauth/token
 
 PLAID_CLIENT_ID=your_client_id
-PLAID_URL_SANDBOX=sandbox.plaid.com
-PLAID_SECRET_KEY_SANDBOX=your_sandbox_key
+PLAID_URL=sandbox.plaid.com
+PLAID_SECRET_KEY=your_sandbox_key
 
 BACKEND_BASE_URL=https://dev-near-oracle-backend.herokuapp.com
 COINMARKET_KEY=your_coinmarketcapapikey
@@ -84,6 +127,7 @@ COVALENT_KEY=your_covalent_api_key
 
 NFT_STORAGE_KEY=your_nft_storage_key
 
+CONTRACT_OWNER_ID=wallet_id_of_the_contract_owner  
 CONTRACT_OWNER_PRIVATE_KEY=private_key_of_the_contract_owner
 SCORE_CONTRACT_NAME=name_of_the_contract_for_storing_a_score
 NFT_CONTRACT_NAME=name_of_the_contract_for_minting_an_NFT
@@ -94,3 +138,18 @@ ENV_CONFIG=testnet | mainnet
 ```
 
 Then, you can run locally in development mode with live reload. Ensure you run this command after `cd` into the local folder where you cloned the repo.
+
+### Helpful Docs & Links
+
+- NEAR JavaScript API Quick Reference: https://docs.near.org/tools/near-api-js/quick-reference
+- NEAR Type Docs: https://near.github.io/near-api-js/
+- Coinbase OAuth Docs:
+https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/sign-in-withpcoinbase-integration
+
+- Plaid Sandbox Docs:
+https://plaid.com/docs/sandbox/
+
+- Plaid Token Endpoints Docs:
+https://plaid.com/docs/api/tokens/#linktokencreate
+
+
