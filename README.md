@@ -10,7 +10,7 @@
 
 This is the client side repo for [NearOracle](https://nearoracle.com), made with the developer experience in mind: Next.js, TypeScript, ESLint, Prettier, Lint-Staged, VSCode, PostCSS, Tailwind CSS. The dApp fetches the user's financial history, passes it to the algorithm, (see the codebase of the NearOracle credit score algorithm at [`near-oracle-algorithm`](https://github.com/BalloonBox-Inc/near-oracle-algorithm)),which executes and returns a score via a Rust smart contract (see codebase at [`near-oracle-contract`](https://github.com/BalloonBox-Inc/near-oracle-contract)).
 
-Continue to read these docs to clone this project and spin it up in your local machine.
+Continue to read these docs to clone this project and spin it up locally.
 
 ---
 
